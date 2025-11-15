@@ -364,4 +364,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ---
 
-**Built for Arc Hackathon 2025** - Demonstrating the future of programmable money and cross-chain financial systems. 🚀
+**Built for Arc Hackathon 2025** - Demonstrating the future of programmable money and cross-chain financial systems. 🚀# arc-rentcredit
