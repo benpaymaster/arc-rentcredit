@@ -1,6 +1,216 @@
-# 🏆 RentCredit - Arc Hackathon Submission
+# � CrossRent - Programmable Rental Escrow System
 
-> Advanced programmable logic for cross-border rental escrows using USDC and EURC
+[![Arc Blockchain](https://img.shields.io/badge/Built%20on-Arc%20Blockchain-blue)](https://arc.net)
+[![Circle Integration](https://img.shields.io/badge/Powered%20by-Circle-green)](https://circle.com)
+[![USDC](https://img.shields.io/badge/Currency-USDC-lightblue)](https://centre.io/usdc)
+
+> **Transforming rental agreements into programmable smart contracts with cross-chain USDC and automated credit building**
+
+## 🎯 Problem Statement
+
+Traditional rental markets suffer from:
+- **Landlord Risk**: No protection against tenant defaults
+- **Tenant Credit Gap**: Rent payments don't build credit history  
+- **Manual Processes**: Deposits held in basic escrow accounts
+- **Cross-border Friction**: International rentals require complex banking
+
+## 💡 Solution
+
+CrossRent creates the first **programmable rental ecosystem** where:
+- 💰 **Deposits become smart**: Automated release based on lease completion
+- 📈 **Rent builds credit**: Each payment increases verifiable reputation score
+- 🛡️ **Shared risk protection**: 10% of deposits create landlord insurance pool
+- 🌍 **Global accessibility**: Cross-chain USDC enables worldwide rentals
+
+## 🏗️ Architecture
+
+### Smart Contracts (Arc Blockchain)
+```
+contracts/
+├── RentCreditEscrow.sol    # Core escrow with programmable logic
+├── ReputationSBT.sol       # Soul-bound credit scoring system  
+└── RiskBufferVault.sol     # Shared insurance pool
+```
+
+### Frontend Application
+```
+frontend/
+└── index.html              # Complete demo with Circle integration
+```
+
+### Backend API
+```
+backend/
+└── server.js               # Node.js API with feedback collection
+```
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 16+
+- Python 3.7+
+- Git
+
+### Installation
+```bash
+# Clone repository
+git clone https://github.com/benpaymaster/arc-rentcredit.git
+cd arc-rentcredit
+
+# Install backend dependencies
+cd backend && npm install
+
+# Start backend server
+node server.js
+# Server runs on http://localhost:3001
+
+# Start frontend (new terminal)
+cd ../frontend
+python3 -m http.server 8081
+# Demo available at http://localhost:8081
+```
+
+## 🎮 Demo Experience
+
+### 1. **Create Circle Wallet** 
+- One-click wallet creation using Circle Programmable Wallets
+- Automatic funding with $100 USDC for testing
+
+### 2. **Bridge USDC to Arc**
+- Seamless cross-chain transfer using Circle Bridge Kit
+- Real-time status updates and confirmations
+
+### 3. **Create Rental Escrow**
+- Set deposit amount, monthly rent, and lease duration
+- Funds automatically locked in programmable smart contract
+
+### 4. **Experience Dual Perspectives**
+- **Tenant View**: Make rent payments, build credit, request deposit return
+- **Landlord View**: Receive notifications, manage properties, release deposits
+
+### 5. **Advanced Features**
+- **Dispute Resolution**: 6-party multisig voting simulation
+- **Credit Building**: Watch reputation score increase with payments
+- **Risk Sharing**: See deposits contribute to shared insurance pool
+
+## 🔧 Technical Highlights
+
+### Circle Integration
+- ✅ **Programmable Wallets**: Dev-controlled wallet creation and management
+- ✅ **Bridge Kit (CCTP)**: Cross-chain USDC transfers from Ethereum to Arc
+- ✅ **User Experience**: One-click onboarding with automatic funding
+
+### Smart Contract Innovation
+- ✅ **Programmable Escrows**: Conditional release based on lease completion
+- ✅ **Automated Credit**: Reputation scores update with each payment
+- ✅ **Risk Distribution**: 10% of deposits flow to shared insurance
+- ✅ **Multisig Disputes**: 4/6 consensus mechanism for conflict resolution
+
+### Frontend Features
+- ✅ **Responsive Design**: Mobile-friendly interface with Tailwind CSS
+- ✅ **Real-time Updates**: Live notifications for payments and disputes
+- ✅ **Persistent Guide**: Step-by-step testing instructions
+- ✅ **Dual Perspective**: Switch between tenant and landlord experiences
+
+## 📊 Demo Data
+
+The demo includes realistic rental scenarios:
+
+| Property | Monthly Rent | Deposit | Duration | Status |
+|----------|-------------|---------|----------|--------|
+| Property A | $1,250 | $2,500 | 12 months | Active (8/12 paid) |
+| Property B | $875 | $1,800 | 6 months | Active (2/6 paid) |
+
+## 🧪 Testing Guide
+
+### User Testing Flow
+1. **Phase 1**: Tenant experience - wallet creation, funding, escrow setup
+2. **Phase 2**: Dual perspective - switch views, see real-time notifications  
+3. **Phase 3**: Advanced features - dispute resolution, credit building
+4. **Phase 4**: Feedback collection - submit ratings and feature preferences
+
+### Feedback Collection
+The demo includes built-in user feedback system:
+- ⭐ 5-star rating system
+- 💬 Comment collection
+- 📈 Feature preference tracking
+- 👥 Real-time user statistics
+
+## 🎯 Arc Hackathon Challenges
+
+### Challenge 1: Advanced Programmable Logic ✅
+- **Multi-party Escrows**: Automated deposit handling with complex conditions
+- **Credit Scoring**: USDC payments build verifiable reputation
+- **Risk Pooling**: Algorithmic fund distribution for landlord protection
+- **Dispute Automation**: Programmable voting and fund release
+
+### Challenge 2: Cross-chain USDC with Bridge Kit ✅
+- **Seamless Bridging**: One-click USDC transfer from Ethereum to Arc
+- **User Experience Focus**: Complex operations hidden behind simple interface
+- **Real-time Feedback**: Live status updates and error handling
+- **Network Abstraction**: Users don't need to understand multi-chain complexity
+
+## 📈 Impact & Market Opportunity
+
+### Market Size
+- **$2.8T Global Rental Market**: Residential and commercial properties
+- **$660B Security Deposits**: Funds locked in traditional escrow
+- **50M+ Rental Transactions**: Annual global rental agreements
+
+### User Benefits
+- **Tenants**: Build credit through rent payments, faster deposit returns
+- **Landlords**: Risk protection, automated management, global reach
+- **Market**: Increased liquidity, reduced disputes, cross-border accessibility
+
+## 🗂️ Documentation
+
+- 📋 **[Technical Documentation](TECHNICAL_DOCUMENTATION.md)**: Detailed architecture and implementation
+- 🧪 **[User Testing Guide](USER_TESTING_GUIDE.md)**: Step-by-step demo instructions
+- 🔧 **[Circle Integration](README-Circle.md)**: Wallet and bridge implementation details
+- 🎯 **[Presentation Deck](presentation.pdf)**: Hackathon pitch and demo overview
+
+## 🎥 Live Demo
+
+**URL**: http://localhost:8081 (when running locally)
+
+**Features**:
+- Complete user journey simulation
+- Real-time feedback collection
+- Dual perspective switching
+- Interactive testing guide
+
+## 🏆 Awards & Recognition
+
+Built for **Arc Hackathon 2025**:
+- 🥇 Challenge 1: Advanced Programmable Logic with USDC
+- 🥇 Challenge 2: Cross-chain USDC with Bridge Kit
+- 🎯 Focus: User experience and real-world utility
+
+## 🔗 Links
+
+- **Repository**: https://github.com/benpaymaster/arc-rentcredit
+- **Live Demo**: http://localhost:8081 (local setup required)
+- **Presentation**: [presentation.pdf](presentation.pdf)
+- **Arc Blockchain**: https://arc.net
+- **Circle**: https://circle.com
+
+## 🤝 Contributing
+
+This is a hackathon submission, but feedback and suggestions are welcome:
+
+1. Test the demo at http://localhost:8081
+2. Submit feedback through the built-in system
+3. Open issues for bugs or feature requests
+4. Star the repository if you find it useful!
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+---
+
+**Built with ❤️ for Arc Hackathon 2025**
+*Showcasing the future of programmable money in real estate*
 
 ## 🚀 Quick Start
 
