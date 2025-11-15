@@ -1,0 +1,23 @@
+[profile.default]
+src = "contracts"
+out = "out"
+libs = ["lib"]
+auto_detect_solc = false
+solc = "0.8.24"
+optimizer = true
+optimizer_runs = 200
+via_ir = true
+evm_version = "cancun"
+
+remappings = [
+    "@openzeppelin/=lib/openzeppelin-contracts/",
+    "forge-std/=lib/forge-std/src/"
+]
+
+[rpc_endpoints]
+arc = "https://api.arc.net/testnet"
+
+[etherscan]
+arc = { key = "${ARC_ETHERSCAN_API_KEY}", url = "https://explorer.arc.net/api" }
+
+[profile.test]
