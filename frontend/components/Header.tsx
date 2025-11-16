@@ -31,18 +31,7 @@ export default function Header() {
               >
                 Payments
               </button>
-              <button 
-                onClick={() => {
-                  document.getElementById('dashboard')?.scrollIntoView({ behavior: 'smooth' })
-                  // Optional: Add visual feedback
-                  window.dispatchEvent(new CustomEvent('openWalletCreation'))
-                  console.log('Connect Wallet clicked - redirecting to dashboard')
-                }}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold hover:shadow-lg transform transition-all duration-200"
-                title="Connect Wallet (required to make payments)"
-              >
-                🔗 Connect Wallet
-              </button>
+              <a href="#guide" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Guide</a>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -69,18 +58,6 @@ export default function Header() {
                   Payments
                 </button>
                 <a href="#guide" className="text-gray-700 hover:text-gray-900 transition-colors font-medium">Guide</a>
-                <button 
-                  onClick={() => {
-                    // Close mobile menu and scroll to dashboard
-                    setIsMenuOpen(false)
-                    document.getElementById('dashboard')?.scrollIntoView({ behavior: 'smooth' })
-                    window.dispatchEvent(new CustomEvent('openWalletCreation'))
-                    console.log('Mobile Connect Wallet clicked')
-                  }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-xl font-semibold w-full hover:shadow-lg transform transition-all duration-200"
-                >
-                  🔗 Connect Wallet
-                </button>
               </nav>
             </div>
           )}

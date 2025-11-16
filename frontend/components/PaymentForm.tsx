@@ -20,7 +20,8 @@ export default function PaymentForm({ userType, onPaymentSuccess, onShowProperti
   const [isProcessing, setIsProcessing] = useState(false)
   const [currentWallet, setCurrentWallet] = useState<WalletType | null>(null)
   const [walletBalance, setWalletBalance] = useState('0')
-  const [step, setStep] = useState<'wallet' | 'payment' | 'success'>('wallet')
+  const [step, setStep] = useState<'payment' | 'success'>('payment') // Start with payment form
+  const [isCreatingWallet, setIsCreatingWallet] = useState(false)
   const propertyRef = useRef<HTMLInputElement | null>(null)
   const amountRef = useRef<HTMLInputElement | null>(null)
 
@@ -29,29 +30,23 @@ export default function PaymentForm({ userType, onPaymentSuccess, onShowProperti
     const wallets = getAllWallets()
     if (wallets.length > 0) {
       setCurrentWallet(wallets[0])
-      setStep('payment')
       loadBalance(wallets[0].id)
     }
 
     // Load properties for landlord view
 
     // Listen for guide/header events to control the form flow
-    const openWallet = () => setStep('wallet')
     const focusProperty = () => {
-      setStep('payment')
       setTimeout(() => propertyRef.current?.focus(), 200)
     }
     const focusAmount = () => {
-      setStep('payment')
       setTimeout(() => amountRef.current?.focus(), 200)
     }
 
-    window.addEventListener('openWalletCreation', openWallet)
     window.addEventListener('focusProperty', focusProperty)
     window.addEventListener('focusAmount', focusAmount)
 
     return () => {
-      window.removeEventListener('openWalletCreation', openWallet)
       window.removeEventListener('focusProperty', focusProperty)
       window.removeEventListener('focusAmount', focusAmount)
     }
@@ -62,29 +57,27 @@ export default function PaymentForm({ userType, onPaymentSuccess, onShowProperti
     setWalletBalance(balance)
   }
 
-  const handleCreateWallet = async () => {
-    setIsProcessing(true)
-    try {
-      const wallet = await createWallet('MATIC-AMOY')
-      if (wallet) {
-        setCurrentWallet(wallet)
-        setWalletBalance(wallet.balance || '0')
-        setStep('payment')
-      }
-    } catch (error) {
-      console.error('Failed to create wallet:', error)
-    } finally {
-      setIsProcessing(false)
-    }
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!currentWallet) return
-
     setIsProcessing(true)
     
     try {
+      // Auto-create wallet if user doesn't have one
+      let wallet = currentWallet
+      if (!wallet) {
+        setIsCreatingWallet(true)
+        toast.loading('Setting up your payment wallet...', { duration: 3000 })
+        
+        wallet = await createWallet('MATIC-AMOY')
+        if (!wallet) {
+          throw new Error('Failed to set up payment wallet')
+        }
+        
+        setCurrentWallet(wallet)
+        setWalletBalance(wallet.balance || '0')
+        toast.success('Payment wallet ready!')
+        setIsCreatingWallet(false)
+      }
       // 🏠 Step 1: Create escrow on smart contract
       const escrowResult = await createEscrow(
         '0x1234567890123456789012345678901234567890', // Mock landlord
@@ -109,7 +102,7 @@ export default function PaymentForm({ userType, onPaymentSuccess, onShowProperti
         destinationChain: 'polygon'
       }
 
-      const transferResult = await executeTransfer(currentWallet.id, transfer)
+      const transferResult = await executeTransfer(wallet.id, transfer)
       
       if (transferResult.success) {
         toast.success('💰 USDC payment sent!')
@@ -143,74 +136,6 @@ export default function PaymentForm({ userType, onPaymentSuccess, onShowProperti
     } finally {
       setIsProcessing(false)
     }
-  }
-
-  // Wallet Creation Step
-  if (step === 'wallet') {
-    return (
-      <div className="space-y-6">
-        {/* Progress Indicator */}
-        <div className="flex justify-center mb-6">
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
-              <span className="text-white font-medium">Create Wallet</span>
-            </div>
-            <ChevronRight className="text-gray-400" size={20} />
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-gray-400 font-bold text-sm">2</div>
-              <span className="text-gray-400">Set Payment</span>
-            </div>
-            <ChevronRight className="text-gray-400" size={20} />
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-gray-400 font-bold text-sm">3</div>
-              <span className="text-gray-400">Success</span>
-            </div>
-          </div>
-        </div>
-        
-        <div className="bg-gradient-to-r from-blue-500/20 to-purple-600/20 border border-blue-400/30 rounded-2xl p-8 text-center">
-          <Wallet className="w-20 h-20 text-blue-300 mx-auto mb-4" />
-          <h3 className="text-2xl font-bold text-white mb-3">Step 1: Create Your Wallet</h3>
-          <p className="text-blue-100 mb-6 text-lg">
-            🚀 Click below to create your secure wallet and start paying rent with USDC
-          </p>
-          <div className="bg-blue-500/10 rounded-xl p-4 mb-6">
-            <div className="text-sm text-blue-200 space-y-2">
-              <div className="flex items-center justify-center space-x-2">
-                <span className="text-green-400">✓</span>
-                <span>Circle Programmable Wallet</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <span className="text-green-400">✓</span>
-                <span>1000 USDC starting balance</span>
-              </div>
-              <div className="flex items-center justify-center space-x-2">
-                <span className="text-green-400">✓</span>
-                <span>Ready for rent payments</span>
-              </div>
-            </div>
-          </div>
-          <button
-            onClick={handleCreateWallet}
-            disabled={isProcessing}
-            className="bg-gradient-to-r from-purple-500 to-indigo-600 text-white px-10 py-4 rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 disabled:opacity-50 flex items-center space-x-3 mx-auto"
-          >
-            {isProcessing ? (
-              <>
-                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Creating Your Wallet...</span>
-              </>
-            ) : (
-              <>
-                <Wallet size={24} />
-                <span>🚀 Create My Wallet</span>
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-    )
   }
 
   // Success Step
@@ -415,9 +340,14 @@ export default function PaymentForm({ userType, onPaymentSuccess, onShowProperti
             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
             <span>Processing...</span>
           </>
+        ) : isCreatingWallet ? (
+          <>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+            <span>Setting up your payment wallet...</span>
+          </>
         ) : (
           <>
-            <span>Pay Rent to Escrow</span>
+            <span>💰 Pay ${amount || '0'} USDC Rent</span>
             <ArrowRight size={20} />
           </>
         )}

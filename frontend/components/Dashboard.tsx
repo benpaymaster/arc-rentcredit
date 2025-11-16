@@ -93,27 +93,30 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Payment Form */}
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-xl p-6 md:p-8">
+          <div className="bg-gradient-to-br from-slate-950/95 via-gray-900/95 to-slate-950/95 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-6 md:p-8">
             {/* Progress Steps for Tenants */}
             {userType === 'tenant' && (
-              <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-gray-50 border border-gray-200 rounded-xl">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">💳 Payment Process</h3>
+              <div className="mb-6 p-4 bg-gradient-to-r from-blue-500/20 to-gray-600/20 border border-blue-400/30 rounded-xl">
+                <h3 className="text-lg font-semibold text-blue-200 mb-3">💳 Simple Payment Process</h3>
                 <div className="flex items-center space-x-4 text-sm">
                   <div className="flex items-center space-x-2">
                     <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xs">1</div>
-                    <span className="text-gray-700">Create Wallet</span>
+                    <span className="text-blue-200">Enter Details</span>
                   </div>
-                  <div className="flex-1 h-px bg-gray-300"></div>
+                  <div className="flex-1 h-px bg-blue-400/30"></div>
                   <div className="flex items-center space-x-2">
                     <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold text-xs">2</div>
-                    <span className="text-gray-600">Enter Amount</span>
+                    <span className="text-gray-300">Pay with USDC</span>
                   </div>
-                  <div className="flex-1 h-px bg-gray-300"></div>
+                  <div className="flex-1 h-px bg-gray-400/30"></div>
                   <div className="flex items-center space-x-2">
                     <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center text-white font-bold text-xs">3</div>
-                    <span className="text-gray-600">Pay Rent</span>
+                    <span className="text-gray-300">Build Credit</span>
                   </div>
                 </div>
+                <p className="text-xs text-blue-200/80 mt-3 italic">
+                  💡 Payment wallet created automatically - no crypto experience needed!
+                </p>
               </div>
             )}
             
@@ -155,8 +158,8 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
           </div>
 
           {/* Payment History */}
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-xl p-6 md:p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          <div className="bg-gradient-to-br from-slate-950/95 via-gray-900/95 to-slate-950/95 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-6 md:p-8">
+            <h2 className="text-2xl font-bold text-white mb-6">
               {userType === 'tenant' ? 'Payment History' : 'Received Payments'}
             </h2>
             <PaymentHistory userType={userType} />
@@ -166,9 +169,9 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
         {/* Stats Cards */}
         <div className="grid md:grid-cols-3 gap-6 mt-8">
           {/* Reputation Score */}
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-xl p-6">
+          <div className="bg-gradient-to-br from-slate-950/95 via-gray-900/95 to-slate-950/95 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-6">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-gray-900">Reputation Score</h3>
+              <h3 className="text-lg font-semibold text-white">Reputation Score</h3>
               <Star className="w-5 h-5 text-yellow-400 fill-current" />
             </div>
             <div className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
@@ -195,9 +198,9 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
           </div>
           
           {/* Vault Protection */}
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-xl p-6">
+          <div className="bg-gradient-to-br from-slate-950/95 via-gray-900/95 to-slate-950/95 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-6">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="text-lg font-semibold text-white">
                 {userType === 'tenant' ? 'Safety Contribution' : 'Default Protection'}
               </h3>
               <div className="w-5 h-5 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
@@ -207,12 +210,12 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
             <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               10%
             </div>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-purple-200 mt-1">
               {userType === 'tenant' 
                 ? 'Extra deposit to safety pool' 
                 : 'Vault covers tenant defaults'}
             </p>
-            <div className="mt-3 text-xs text-gray-500">
+            <div className="mt-3 text-xs text-purple-300">
               Pool: ${(127500 + (totalPaid * 0.1)).toLocaleString()} USDC
               {totalPaid > 0 && (
                 <div className="text-green-400/60 mt-1">
@@ -223,8 +226,8 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
           </div>
           
           {/* In Escrow */}
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-xl p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">In Escrow</h3>
+          <div className="bg-gradient-to-br from-slate-950/95 via-gray-900/95 to-slate-950/95 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-6">
+            <h3 className="text-lg font-semibold text-white mb-2">In Escrow</h3>
             <div className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
               $5,000 USDC
             </div>
