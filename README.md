@@ -289,7 +289,7 @@ const payment = await processRentPayment({
 
 ## 🔗 Links
 
-- **Repository**: https://github.com/benpaymaster/arc-rentcredit
+- **Repository**: https://github.com/benpaymaster/CrossRent
 - **Live Demo**: https://crossrent-arc.netlify.app
 - **Demo Video**: https://www.loom.com/share/2788850d31d14b03bfc30631be419ae5
 - **Arc Network**: https://arc.net
