@@ -12,7 +12,7 @@ export default function Home() {
   const [paymentSuccessCallback, setPaymentSuccessCallback] = useState<((amount: number) => void) | null>(null)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950">
+    <div className="min-h-screen bg-gray-50">
       <MottoOverlay />
       <Header />
       <ConnectCTA />
