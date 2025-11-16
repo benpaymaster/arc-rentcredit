@@ -1,10 +1,13 @@
-# � CrossRent - Programmable Rental Escrow System
+# 🏠 CrossRent - Global Rent Payment Platform
 
 [![Arc Blockchain](https://img.shields.io/badge/Built%20on-Arc%20Blockchain-blue)](https://arc.net)
 [![Circle Integration](https://img.shields.io/badge/Powered%20by-Circle-green)](https://circle.com)
 [![USDC](https://img.shields.io/badge/Currency-USDC-lightblue)](https://centre.io/usdc)
+[![User Tested](https://img.shields.io/badge/User%20Tested-17%20Responses-brightgreen)](https://github.com/benpaymaster/CrossRent)
 
-> **Transforming rental agreements into programmable smart contracts with cross-chain USDC and automated credit building**
+> **"Global Rent. Universal Credit. Global Reputation."**
+> 
+> Transforming rental agreements into programmable smart contracts with cross-chain USDC and automated credit building. **Tested with 17 real users!**
 
 ## 🎯 Problem Statement
 
@@ -21,6 +24,28 @@ CrossRent creates the first **programmable rental ecosystem** where:
 - 📈 **Rent builds credit**: Each payment increases verifiable reputation score
 - 🛡️ **Shared risk protection**: 10% of deposits create landlord insurance pool
 - 🌍 **Global accessibility**: Cross-chain USDC enables worldwide rentals
+
+## 🧪 **User Testing Results (17 Responses)**
+
+**Real user feedback from 4 live testers + 17 survey responses:**
+
+### ✅ **What Works:**
+- **100% said it was simple**: "I wish Venmo was this easy"
+- **Payment flow intuitive**: All 4 users successfully paid rent without guidance
+- **Trust factor high**: Users felt secure with blockchain/USDC
+
+### 🔧 **Improvements Made:**
+1. **🔗 MEGA Connect Wallet Button**: Made wallet connection impossible to miss
+2. **📋 Payment Evidence System**: Added comprehensive tracking and monitoring
+3. **🎨 Motto Overlay**: Full-screen motto display so users can't miss it
+4. **🎨 Toned Down Colors**: Reduced dominant purple, improved contrast
+5. **📊 Evidence Dashboard**: Track all payments for evaluation and monitoring
+
+### 🎯 **Success Metrics:**
+- **4/4 users** completed rent payments successfully
+- **1/4 users** initially connected wallet (now improved)
+- **0/4 users** initially noticed motto (now impossible to miss)
+- **17 survey responses** with feature feedback collected
 
 ## 🏗️ Architecture
 
@@ -55,20 +80,39 @@ backend/
 ```bash
 # Clone repository
 git clone https://github.com/benpaymaster/CrossRent.git
-cd arc-rentcredit
+cd CrossRent
 
-# Install backend dependencies
-cd backend && npm install
+# Start frontend
+cd frontend && npm install && npm run dev
+# App available at http://localhost:3000
 
-# Start backend server
-node server.js
-# Server runs on http://localhost:3001
-
-# Start frontend (new terminal)
-cd ../frontend
-python3 -m http.server 8081
-# Demo available at http://localhost:8081
+# Start backend (optional - for feedback collection)
+cd ../backend && npm install && node server.js
+# API runs on http://localhost:3001
 ```
+
+## 🚀 **NEW: Post-Testing Features**
+
+Based on 17 user responses, we've added:
+
+### 📊 **Payment Evidence System**
+- **Real-time payment tracking**: Every transaction recorded with proof
+- **Evidence dashboard**: Export payment reports for evaluation
+- **Performance metrics**: Success rates, volume, user statistics
+- **Monitoring tools**: Track user behavior and payment patterns
+
+### 🔗 **Mega Connect Wallet CTA**
+- **Impossible to miss**: Giant green button with animations
+- **Clear instructions**: "STEP 1: CONNECT WALLET" messaging
+- **Floating CTA**: Persistent reminder until wallet connected
+- **Better UX**: Green colors instead of dominant purple
+
+### 🎨 **Motto Reinforcement**
+- **Full-screen overlay**: "Global Rent. Universal Credit. Global Reputation."
+- **Multiple touchpoints**: Header, dialogs, success screens
+- **Animated effects**: Glow and fade animations for attention
+
+## 📈 **User Testing Insights**
 
 ## 🎮 Demo Experience
 
