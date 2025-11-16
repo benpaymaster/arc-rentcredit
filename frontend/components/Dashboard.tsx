@@ -88,21 +88,29 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
       return newCount
     })
     
-    // Increase reputation score based on payment
-    const scoreIncrease = Math.min(20, Math.floor(amount / 100 * 2)) // Up to +20 points
+    // Increase reputation score based on payment (enhanced for demo)
+    const scoreIncrease = Math.min(50, Math.floor(amount / 100 * 5)) // Up to +50 points for demo
+    console.log('🎯 DEMO: Reputation score calculation:', { amount, scoreIncrease })
+    
     setReputationScore(prev => {
       const newScore = Math.min(1000, prev[userType] + scoreIncrease)
       const newState = {
         ...prev,
         [userType]: newScore
       }
-      console.log('⭐ Reputation score updated:', { 
+      console.log('⭐ REPUTATION SCORE UPDATED - DEMO:', { 
         userType, 
         prevScore: prev[userType], 
         scoreIncrease, 
-        newScore,
+        newScore: newScore,
+        change: `${prev[userType]} → ${newScore}`,
         fullState: newState
       })
+      
+      // Visual confirmation for demo
+      setTimeout(() => {
+        console.log('📈 VISIBLE CHANGE:', `Score changed from ${prev[userType]} to ${newScore}`)
+      }, 100)
       
       // Persist to localStorage
       if (typeof window !== 'undefined') {
@@ -248,7 +256,7 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
               <h3 className="text-lg font-semibold text-white">Reputation Score</h3>
               <Star className="w-5 h-5 text-yellow-400 fill-current" />
             </div>
-            <div className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent transition-all duration-500" key={reputationScore[userType]}>
+            <div className="text-3xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent transition-all duration-500 pulse-on-change" key={`${reputationScore[userType]}-${Date.now()}`}>
               {reputationScore[userType]}/1000
             </div>
             <div className="flex items-center mt-2">

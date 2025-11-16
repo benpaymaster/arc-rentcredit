@@ -77,8 +77,14 @@ backend/
 
 ## 🚀 Live Demo
 
-**Frontend URL**: http://localhost:3001 (when running locally)
-**Backend URL**: http://localhost:3001 (integrated)
+**Frontend URL**: http://localhost:3004/ (when running locally)
+**Backend URL**: http://localhost:3004/ (integrated)
+
+## 🎬 Demo Video
+
+**Watch the full 3-minute demo**: https://www.loom.com/share/2788850d31d14b03bfc30631be419ae5
+
+*See how tenants pay rent with zero crypto knowledge and landlords track payments in real-time!*
 
 ## 🚀 Quick Start
 
@@ -212,7 +218,8 @@ The application includes realistic test scenarios:
 ## 🔗 Links
 
 - **Repository**: https://github.com/benpaymaster/arc-rentcredit
-- **Live Demo**: http://localhost:3001 (local setup)
+- **Live Demo**: http://localhost:3004/ (local setup)
+- **Demo Video**: https://www.loom.com/share/2788850d31d14b03bfc30631be419ae5
 - **Arc Network**: https://arc.net
 - **Circle**: https://circle.com
 
@@ -228,7 +235,7 @@ The application includes realistic test scenarios:
 
 This project showcases real-world blockchain utility with superior UX. Feedback welcome!
 
-1. Try the demo at http://localhost:3001
+1. Try the demo at http://localhost:3004/
 2. Submit feedback through the built-in system
 3. Open issues for suggestions or improvements
 

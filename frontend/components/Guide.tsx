@@ -99,34 +99,75 @@ export default function Guide({ userType, setUserType, onPaymentSuccess }: Guide
     <section className="px-4 py-16 md:px-8" id="guide">
       <div className="max-w-7xl mx-auto">
         
-        {/* HERO CTA - FIRST THING RENTERS SEE */}
-        <div className="mb-16 text-center">
-          <div className="backdrop-blur-xl bg-gradient-to-r from-purple-600/40 to-blue-600/40 rounded-3xl border-4 border-purple-400 shadow-2xl p-8 animate-pulse">
-            <div className="mb-4">
-              <div className="text-6xl mb-4">💳</div>
-              <h1 className="text-5xl md:text-6xl font-black text-white mb-4">
-                START PAYING RENT
-              </h1>
-              <p className="text-3xl text-purple-200 font-bold mb-6">
-                ⚡ SIMPLE 3-STEP PROCESS ⚡
+        {/* HERO CTA - CONDITIONAL BASED ON USER TYPE */}
+        {userType === 'tenant' ? (
+          /* TENANT: START PAYING RENT CTA */
+          <div className="mb-16 text-center">
+            <div className="backdrop-blur-xl bg-gradient-to-r from-purple-600/40 to-blue-600/40 rounded-3xl border-4 border-purple-400 shadow-2xl p-8 animate-pulse">
+              <div className="mb-4">
+                <div className="text-6xl mb-4">💳</div>
+                <h1 className="text-5xl md:text-6xl font-black text-white mb-4">
+                  START PAYING RENT
+                </h1>
+                <p className="text-3xl text-purple-200 font-bold mb-6">
+                  ⚡ SIMPLE 3-STEP PROCESS ⚡
+                </p>
+              </div>
+              
+              <button 
+                onClick={() => {
+                  setUserType('tenant')
+                  setShowPaymentDialog(true)
+                }}
+                className="bg-gradient-to-r from-purple-400 to-blue-400 text-white px-16 py-8 rounded-3xl font-black text-3xl hover:shadow-2xl hover:scale-110 transform transition-all duration-200 shadow-purple-400/50 animate-bounce border-4 border-white"
+              >
+                🚀 START PAYING RENT NOW 🚀
+              </button>
+              
+              <p className="text-purple-200 mt-6 text-xl font-medium">
+                👆 Click to begin - digital account created automatically for you
               </p>
             </div>
-            
-            <button 
-              onClick={() => {
-                setUserType('tenant')
-                setShowPaymentDialog(true)
-              }}
-              className="bg-gradient-to-r from-purple-400 to-blue-400 text-white px-16 py-8 rounded-3xl font-black text-3xl hover:shadow-2xl hover:scale-110 transform transition-all duration-200 shadow-purple-400/50 animate-bounce border-4 border-white"
-            >
-              🚀 START PAYING RENT NOW 🚀
-            </button>
-            
-            <p className="text-purple-200 mt-6 text-xl font-medium">
-              👆 Click to begin - digital account created automatically for you
-            </p>
           </div>
-        </div>
+        ) : (
+          /* LANDLORD: PROPERTY MANAGEMENT DASHBOARD */
+          <div className="mb-16">
+            <div className="backdrop-blur-xl bg-gradient-to-r from-blue-600/40 to-green-600/40 rounded-3xl border-4 border-blue-400 shadow-2xl p-8">
+              <div className="text-center mb-8">
+                <div className="text-6xl mb-4">🏠</div>
+                <h1 className="text-5xl md:text-6xl font-black text-white mb-4">
+                  PROPERTY MANAGEMENT
+                </h1>
+                <p className="text-3xl text-blue-200 font-bold mb-6">
+                  ⚡ REAL-TIME TENANT TRACKING ⚡
+                </p>
+              </div>
+              
+              <div className="grid md:grid-cols-3 gap-6 mt-8">
+                {/* Active Tenants */}
+                <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 text-center">
+                  <div className="text-4xl font-bold text-green-400 mb-2">3</div>
+                  <p className="text-white text-lg font-semibold">Active Tenants</p>
+                  <p className="text-white/70 text-sm">Currently paying</p>
+                </div>
+                
+                {/* Monthly Revenue */}
+                <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 text-center">
+                  <div className="text-4xl font-bold text-blue-400 mb-2">$7,875</div>
+                  <p className="text-white text-lg font-semibold">Monthly Revenue</p>
+                  <p className="text-white/70 text-sm">Total received</p>
+                </div>
+                
+                {/* Properties */}
+                <div className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-2xl p-6 text-center">
+                  <div className="text-4xl font-bold text-purple-400 mb-2">2</div>
+                  <p className="text-white text-lg font-semibold">Properties</p>
+                  <p className="text-white/70 text-sm">Under management</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Header */}
         <div className="text-center mb-12">
@@ -242,16 +283,23 @@ export default function Guide({ userType, setUserType, onPaymentSuccess }: Guide
               </p>
             </div>
 
-            <button 
-              onClick={() => {
-                setUserType('tenant')
-                setShowPaymentDialog(true)
-              }}
-              className="w-full bg-gradient-to-r from-purple-500 to-blue-600 text-white py-4 rounded-2xl font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 flex items-center justify-center space-x-2"
-            >
-              <span>� Start Paying Rent Now</span>
-              <ArrowRight size={20} />
-            </button>
+            {/* Conditional Action Button */}
+            {userType === 'tenant' ? (
+              <button 
+                onClick={() => {
+                  setUserType('tenant')
+                  setShowPaymentDialog(true)
+                }}
+                className="w-full bg-gradient-to-r from-purple-500 to-blue-600 text-white py-4 rounded-2xl font-semibold hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 flex items-center justify-center space-x-2"
+              >
+                <span>💳 Start Paying Rent Now</span>
+                <ArrowRight size={20} />
+              </button>
+            ) : (
+              <div className="w-full bg-gradient-to-r from-blue-500 to-green-600 text-white py-4 rounded-2xl font-semibold text-center border border-blue-400/30">
+                <span>🏠 View Tenant Payments in Dashboard Above</span>
+              </div>
+            )}
           </div>
         </div>
 
