@@ -12,8 +12,9 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            padding: 20px;
         }
         
         /* Enhanced button styles */
@@ -21,29 +22,46 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
             transition: all 0.3s ease;
+            border: none;
         }
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
         }
         
         .btn-success {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             box-shadow: 0 4px 15px rgba(17, 153, 142, 0.3);
+            border: none;
         }
         .btn-success:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(17, 153, 142, 0.4);
         }
         
-        /* Enhanced card shadows */
+        /* Modern card shadows */
         .card-enhanced {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .card-enhanced:hover {
             transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Modern glass morphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .glass-dark {
+            background: rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         /* Custom scrollbar for aesthetics */
@@ -54,21 +72,41 @@
             background: linear-gradient(45deg, #667eea, #764ba2);
             border-radius: 4px;
         }
-        /* Guide sidebar adjustments */
+        
+        /* Attention-grabbing animations for key elements */
+        @keyframes gentle-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(102, 126, 234, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(102, 126, 234, 0.5); }
+        }
+        
+        @keyframes rainbow-border {
+            0% { border-color: #667eea; }
+            25% { border-color: #11998e; }
+            50% { border-color: #764ba2; }
+            75% { border-color: #38ef7d; }
+            100% { border-color: #667eea; }
+        }
+        
+        .pulse-attention {
+            animation: gentle-pulse 2s ease-in-out infinite;
+        }
+        
+        .rainbow-border {
+            animation: rainbow-border 3s ease-in-out infinite;
+        }
+        
+        /* Guide sidebar adjustments - FIXED POSITIONING */
         .guide-open {
-            max-width: calc(100vw - 370px) !important;
-            margin-right: 360px;
+            max-width: calc(100vw - 350px) !important;
         }
         @media (max-width: 1400px) {
             .guide-open {
-                max-width: calc(100vw - 340px) !important;
-                margin-right: 330px;
+                max-width: calc(100vw - 320px) !important;
             }
         }
         @media (max-width: 768px) {
             .guide-open {
                 max-width: 100vw !important;
-                margin-right: 0px;
             }
             #guide-sidebar {
                 position: fixed !important;
@@ -77,7 +115,7 @@
                 left: 0 !important;
                 width: 100vw !important;
                 height: 100vh !important;
-                z-index: 50 !important;
+                z-index: 100 !important;
                 background: rgba(0,0,0,0.5) !important;
             }
             #guide-sidebar > div:last-child {
@@ -86,56 +124,109 @@
                 margin-top: 60px;
             }
         }
+        
+        /* Fix guide z-index to not block buttons */
+        #guide-sidebar {
+            z-index: 15 !important;
+        }
+        
+        /* Ensure header buttons are above guide */
+        header {
+            z-index: 50 !important;
+            position: relative;
+        }
+        
+        /* Ensure wallet button specifically is always clickable */
+        #wallet-connect-btn {
+            z-index: 60 !important;
+            position: relative;
+        }
+        
+        /* Ensure all header buttons are clickable */
+        header button {
+            z-index: 55 !important;
+            position: relative;
+        }
     </style>
 </head>
-<body class="min-h-screen flex items-start justify-center p-4 sm:p-8">
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 py-8">
 
-    <div id="app-container" class="w-full max-w-4xl bg-white shadow-2xl rounded-xl p-6 sm:p-10 border border-gray-100 card-enhanced">
+    <div id="app-container" class="min-h-screen w-full px-6 py-12">
 
         <!-- Header -->
-        <header class="mb-8 pb-4 border-b border-blue-100 flex justify-between items-center">
-            <h1 class="text-3xl font-extrabold text-blue-800 tracking-tight">
-                CrossRent Demo
-            </h1>
-            <div class="flex items-center space-x-4">
-                <!-- User Stats & Feedback -->
-                <div class="flex items-center space-x-2 text-xs">
-                    <div class="bg-green-50 border border-green-200 rounded-lg px-3 py-1">
-                        <span class="text-green-700 font-semibold" id="user-stats">👥 0 users tested • ⭐ 0/5 rating</span>
+        <header class="mb-16 pb-10 border-b border-white/30 bg-white/80 backdrop-blur-md rounded-xl p-8 shadow-lg max-w-4xl mx-auto">
+            <div class="flex flex-col space-y-10">
+                <!-- Title Row -->
+                <div class="flex justify-between items-center py-4">
+                    <div class="flex items-center space-x-6">
+                        <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg p-2">
+                            <img src="./crossrent-logo.svg" 
+                                 alt="CrossRent Logo" class="w-12 h-12" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center hidden">
+                                <span class="text-2xl">🏠</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h1 class="text-5xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                CrossRent
+                            </h1>
+                            <p class="text-lg text-gray-600 font-medium mt-2">GLOBAL RENT. UNIVERSAL CREDIT. GLOBAL REPUTATION</p>
+                        </div>
                     </div>
-                    <button onclick="toggleTestingGuide()" class="px-3 py-1 bg-purple-100 text-purple-700 hover:bg-purple-200 rounded-lg font-medium transition">
-                        📖 Step-by-Step Guide
-                    </button>
-                    <button onclick="showFeedbackModal()" class="px-3 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-lg font-medium transition">
-                        📝 Give Feedback
-                    </button>
-                    <button onclick="showFeedbackViewer()" class="px-3 py-1 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg font-medium transition">
-                        👀 View Feedback
-                    </button>
+                    
+                    <!-- User Stats -->
+                    <div class="glass-dark rounded-xl px-6 py-4 border border-white/20 space-y-1">
+                        <div>
+                            <span class="text-green-600 font-bold text-lg" id="user-stats">👥 0 users</span>
+                        </div>
+                        <div class="text-blue-600 font-bold text-sm" id="reputation-score">🏆 Reputation: 0/1000</div>
+                        <div class="text-purple-700 font-medium text-sm" id="safety-pool">🛡️ Pool: $0.00</div>
+                    </div>
                 </div>
                 
-                <!-- Perspective Switcher -->
-                <div class="flex bg-gray-100 rounded-lg p-1">
-                    <button id="tenant-view-btn" onclick="switchPerspective('tenant')" class="px-3 py-1 text-xs font-medium bg-blue-600 text-white rounded transition">
-                        👤 Tenant View
-                    </button>
-                    <button id="landlord-view-btn" onclick="switchPerspective('landlord')" class="px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-800 rounded transition">
-                        🏠 Landlord View
-                    </button>
-                </div>
-                
-                <button id="wallet-connect-btn" onclick="createUserWallet('tenant')" class="px-4 py-2 btn-primary text-white text-sm font-medium rounded-lg transition duration-150">
-                    Create Circle Wallet
-                </button>
-                <div id="wallet-status" class="text-xs">
-                    <div class="wallet-address text-gray-600">Circle Wallet: Not Created</div>
-                    <div id="wallet-balance" class="text-green-600 font-medium hidden">Balance: $0.00 USDC</div>
+                <!-- Controls Row -->
+                <div class="flex flex-wrap items-center justify-between gap-6 py-4">
+                    <!-- Left Side - Action Buttons -->
+                    <div class="flex items-center space-x-4">
+                        <button onclick="toggleTestingGuide()" class="px-6 py-4 glass-dark hover:bg-white/10 rounded-xl font-bold transition text-purple-700 border border-purple-200/50 text-lg">
+                            📖 Guide
+                        </button>
+                        <button onclick="showFeedbackModal()" class="px-6 py-4 glass-dark hover:bg-white/10 rounded-xl font-bold transition text-blue-700 border border-blue-200/50 text-lg">
+                            📝 Feedback
+                        </button>
+                        <button onclick="showFeedbackViewer()" class="px-6 py-4 glass-dark hover:bg-white/10 rounded-xl font-bold transition text-gray-700 border border-gray-200/50 text-lg">
+                            👀 View
+                        </button>
+                    </div>
+                    
+                    <!-- Center - Perspective -->
+                    <div class="flex items-center space-x-4 glass-dark px-6 py-4 rounded-xl border border-blue-200/50">
+                        <label class="text-lg font-black text-blue-800">View:</label>
+                        <select id="perspective-select" onchange="switchPerspective(this.value)" 
+                                class="px-4 py-3 bg-white/80 border border-blue-300/50 rounded-lg text-lg font-bold focus:ring-2 focus:ring-blue-500 backdrop-blur">
+                            <option value="tenant" selected>👤 Tenant</option>
+                            <option value="landlord">🏠 Landlord</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Right Side - Wallet -->
+                    <div class="flex items-center space-x-6 glass-dark px-6 py-4 rounded-xl border border-gray-200/50">
+                        <button id="wallet-connect-btn" onclick="createUserWallet('tenant')" 
+                                class="px-8 py-4 btn-primary text-white font-black rounded-xl transition duration-150 text-lg pulse-attention shadow-lg">
+                            🚀 CREATE WALLET
+                        </button>
+                        <div class="text-lg">
+                            <div class="wallet-address text-gray-700 font-bold">Circle Wallet: Not Created</div>
+                            <div id="wallet-balance" class="text-green-600 font-black hidden">Balance: $0.00 USDC</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
 
         <!-- Dynamic Content Will Be Rendered Here -->
-        <div id="content">
+        <div id="content" class="max-w-4xl mx-auto">
             <!-- Initial screen will be rendered by JS -->
         </div>
 
@@ -143,19 +234,19 @@
         <div id="toasts" class="fixed top-5 right-5 space-y-2 z-40"></div>
         
         <!-- Persistent Testing Guide Sidebar -->
-        <div id="guide-sidebar" class="fixed right-4 top-20 w-80 bg-white border border-gray-200 rounded-lg shadow-xl z-30 hidden transition-transform duration-300 ease-in-out">
-            <div class="bg-purple-50 border-b border-purple-200 p-3 flex justify-between items-center">
-                <h4 class="font-bold text-purple-800 text-sm">📖 Testing Guide</h4>
-                <button onclick="toggleTestingGuide()" class="text-purple-400 hover:text-purple-600 text-lg">×</button>
+        <div id="guide-sidebar" class="fixed right-4 top-32 w-80 bg-white border border-gray-200 rounded-lg shadow-xl hidden transition-transform duration-300 ease-in-out" style="z-index: 15 !important; max-height: calc(100vh - 200px);">
+            <div class="bg-purple-50 border-b border-purple-200 p-4 flex justify-between items-center sticky top-0">
+                <h4 class="font-bold text-purple-800 text-lg">📖 Testing Guide</h4>
+                <button onclick="toggleTestingGuide()" class="text-purple-600 hover:text-purple-800 text-xl font-bold cursor-pointer hover:bg-purple-200 rounded-full w-8 h-8 flex items-center justify-center transition" style="z-index: 50 !important;">✕</button>
             </div>
-            <div class="p-4 max-h-96 overflow-y-auto text-xs space-y-3">
-                <div class="bg-blue-50 border border-blue-200 rounded p-2">
-                    <p class="font-semibold text-blue-800">🎯 Goal: Test dual-perspective rental ecosystem</p>
+            <div class="p-4 max-h-96 overflow-y-auto text-sm space-y-4">
+                <div class="bg-blue-50 border border-blue-200 rounded p-3">
+                    <p class="font-semibold text-blue-800 text-sm">🎯 Goal: Test dual-perspective rental ecosystem</p>
                 </div>
                 
                 <div>
-                    <h5 class="font-bold text-gray-800 mb-1">Phase 1: Tenant Experience</h5>
-                    <ol class="list-decimal list-inside space-y-1 text-gray-700 text-xs">
+                    <h5 class="font-bold text-gray-800 mb-2 text-base">Phase 1: Tenant Experience</h5>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm">
                         <li><strong>Create Circle Wallet</strong> - Click blue button</li>
                         <li><strong>Fund Wallet</strong> - Get $100 USDC automatically</li>
                         <li><strong>Create Escrow</strong> - Set up rental agreement</li>
@@ -164,8 +255,8 @@
                 </div>
                 
                 <div>
-                    <h5 class="font-bold text-gray-800 mb-1">Phase 2: Dual-Perspective</h5>
-                    <ol class="list-decimal list-inside space-y-1 text-gray-700 text-xs">
+                    <h5 class="font-bold text-gray-800 mb-2 text-base">Phase 2: Dual-Perspective</h5>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm">
                         <li><strong>Switch to Landlord</strong> - Click "🏠 Landlord View"</li>
                         <li><strong>See Notifications</strong> - Watch payment confirmations</li>
                         <li><strong>Test Real-time</strong> - Switch during payments</li>
@@ -173,21 +264,21 @@
                 </div>
                 
                 <div>
-                    <h5 class="font-bold text-gray-800 mb-1">Phase 3: Advanced Features</h5>
-                    <ol class="list-decimal list-inside space-y-1 text-gray-700 text-xs">
+                    <h5 class="font-bold text-gray-800 mb-2 text-base">Phase 3: Advanced Features</h5>
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700 text-sm">
                         <li><strong>Test Disputes</strong> - Try multisig resolution</li>
                         <li><strong>Release Deposits</strong> - Complete lease cycle</li>
                         <li><strong>Give Feedback</strong> - Rate your experience</li>
                     </ol>
                 </div>
                 
-                <div class="bg-green-50 border border-green-200 rounded p-2">
-                    <p class="font-semibold text-green-800 text-xs">💡 Safety Deposit Pool:</p>
-                    <p class="text-green-700 text-xs">10% of deposits go into shared insurance fund protecting landlords from tenant defaults</p>
+                <div class="bg-green-50 border border-green-200 rounded p-3">
+                    <p class="font-semibold text-green-800 text-sm">💡 Safety Deposit Pool:</p>
+                    <p class="text-green-700 text-sm">10% of deposits go into shared insurance fund protecting landlords from tenant defaults</p>
                 </div>
                 
-                <div class="bg-yellow-50 border border-yellow-200 rounded p-2">
-                    <p class="text-yellow-800 text-xs">
+                <div class="bg-yellow-50 border border-yellow-200 rounded p-3">
+                    <p class="text-yellow-800 text-sm">
                         <strong>⭐ Key:</strong> Show judges complete rental ecosystem with Circle Programmable Wallets!
                     </p>
                 </div>
@@ -475,6 +566,10 @@
                     walletBtn.textContent = '⏳ Funding Wallet...';
                     await fundUserWallet(100); // $100 USDC for demo
                     
+                    // Award small reputation for creating and funding the wallet
+                    updateReputationScore(10, 'Wallet created');
+                    updateSafetyPoolDisplay();
+
                     return data;
                 } else {
                     throw new Error(data.error);
@@ -605,6 +700,187 @@
                 console.error('Contract execution failed:', error);
                 showToast('Contract execution failed: ' + error.message, 'error');
                 throw error;
+            }
+        }
+
+        // Demo value fillers for quick setup
+        function calculateDeposit(multiplier) {
+            const monthlyRent = parseFloat(document.getElementById('monthly-rent').value) || 1250;
+            const calculatedDeposit = monthlyRent * multiplier;
+            document.getElementById('deposit-amount').value = calculatedDeposit;
+            
+            // Visual feedback
+            const depositField = document.getElementById('deposit-amount');
+            depositField.style.backgroundColor = '#d1fae5';
+            setTimeout(() => {
+                depositField.style.backgroundColor = '';
+            }, 1000);
+        }
+
+        // Update reputation score
+        function updateReputationScore(points, action) {
+            appState.reputationScore = Math.min(appState.reputationScore + points, 1000);
+            
+            const reputationDisplay = document.getElementById('reputation-score');
+            if (reputationDisplay) {
+                reputationDisplay.textContent = `🏆 Reputation: ${appState.reputationScore}/1000`;
+                
+                // Add visual feedback
+                reputationDisplay.style.backgroundColor = '#dcfce7';
+                setTimeout(() => {
+                    reputationDisplay.style.backgroundColor = '';
+                }, 1500);
+            }
+            
+            showToast(`+${points} Reputation: ${action}! Total: ${appState.reputationScore}/1000`, 'success');
+            // Also refresh safety pool display in case reputation change accompanies pool change
+            updateSafetyPoolDisplay();
+        }
+
+        // Update Safety Deposit Pool display
+        function updateSafetyPoolDisplay() {
+            const poolEl = document.getElementById('safety-pool');
+            if (!poolEl) return;
+            poolEl.textContent = `🛡️ Pool: ${formatCurrency(appState.riskBuffer || 0)}`;
+            poolEl.style.backgroundColor = '#eef2ff';
+            setTimeout(() => poolEl.style.backgroundColor = '', 1000);
+        }
+
+        // Handle monthly rent payment
+        function payMonthlyRent() {
+            const rentAmount = parseFloat(document.getElementById('rent-payment-amount').value) || 1250;
+            const selectedCurrency = document.getElementById('selected-currency-display').textContent.includes('EURC') ? 'EURC' : 'USDC';
+            
+            showToast(`Processing ${rentAmount} ${selectedCurrency} rent payment...`, 'info');
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                showToast(`✅ Rent payment successful! Paid ${rentAmount} ${selectedCurrency}`, 'success');
+                
+                // Award reputation points for on-time payment
+                updateReputationScore(50, 'On-time rent payment');
+                
+                // Update UI to show payment made
+                const payButton = document.querySelector('button[onclick="payMonthlyRent()"]');
+                payButton.innerHTML = '✅ PAID';
+                payButton.className = payButton.className.replace('bg-green-500', 'bg-gray-400');
+                payButton.disabled = true;
+            }, 2000);
+        }
+
+        // Handle currency selection
+        function selectCurrency(currency) {
+            const usdcCard = document.querySelector('div[onclick="selectCurrency(\'USDC\')"]');
+            const eurcCard = document.querySelector('div[onclick="selectCurrency(\'EURC\')"]');
+            const display = document.getElementById('selected-currency-display');
+            
+            // Reset borders
+            usdcCard.className = usdcCard.className.replace('border-blue-500', 'border-gray-300');
+            eurcCard.className = eurcCard.className.replace('border-purple-500', 'border-gray-300');
+            
+            if (currency === 'USDC') {
+                usdcCard.className = usdcCard.className.replace('border-gray-300', 'border-blue-500');
+                display.textContent = 'Selected: USDC (US Dollar Coin)';
+                display.className = 'text-blue-700 font-bold';
+            } else {
+                eurcCard.className = eurcCard.className.replace('border-gray-300', 'border-purple-500');
+                display.textContent = 'Selected: EURC (Euro Coin)';
+                display.className = 'text-purple-700 font-bold';
+            }
+            
+            // Update payment currency dropdown
+            const paymentCurrency = document.getElementById('payment-currency');
+            if (paymentCurrency) {
+                paymentCurrency.value = currency;
+            }
+            
+            showToast(`Currency changed to ${currency}`, 'info');
+        }
+
+        // Handle tenancy duration changes
+        function updateContractDetails() {
+            const duration = parseInt(document.getElementById('tenancy-duration').value) || 6;
+            const monthlyRent = parseFloat(document.getElementById('rent-payment-amount').value) || 1250;
+            
+            // Calculate total contract value
+            const totalValue = monthlyRent * duration;
+            document.getElementById('total-contract-value').textContent = `$${totalValue.toLocaleString()}`;
+            
+            // Calculate end date
+            const endDate = new Date();
+            endDate.setMonth(endDate.getMonth() + duration);
+            const options = { year: 'numeric', month: 'long' };
+            document.getElementById('contract-end-date').textContent = endDate.toLocaleDateString('en-US', options);
+        }
+
+        // Initialize event listeners when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add listeners for contract calculations
+            const durationSelect = document.getElementById('tenancy-duration');
+            const rentInput = document.getElementById('rent-payment-amount');
+            
+            if (durationSelect) {
+                durationSelect.addEventListener('change', updateContractDetails);
+            }
+            if (rentInput) {
+                rentInput.addEventListener('input', updateContractDetails);
+            }
+            
+            // Initialize contract details
+            setTimeout(updateContractDetails, 500);
+        });
+        
+        function fillDemoValues(type) {
+            const values = {
+                apartment: {
+                    rent: 1250,
+                    deposit: 2500,
+                    threshold: 500,
+                    duration: 6,
+                    landlord: '0xLandlordDemo1234567890ABCDEF'
+                },
+                house: {
+                    rent: 2100,
+                    deposit: 4200,
+                    threshold: 800,
+                    duration: 12,
+                    landlord: '0xHouseLandlord567890ABCDEF123'
+                },
+                studio: {
+                    rent: 875,
+                    deposit: 1750,
+                    threshold: 300,
+                    duration: 6,
+                    landlord: '0xStudioOwner890ABCDEF1234567'
+                }
+            };
+            
+            const config = values[type];
+            if (!config) return;
+            
+            // Fill form fields
+            document.getElementById('monthly-rent').value = config.rent;
+            document.getElementById('deposit-amount').value = config.deposit;
+            document.getElementById('damage-threshold').value = config.threshold;
+            document.getElementById('duration').value = config.duration;
+            document.getElementById('landlord-address').value = config.landlord;
+            
+            // Show confirmation
+            showToast(`✅ Demo values filled for ${type}! Monthly rent: $${config.rent}`, 'success');
+        }
+
+        // Calculate deposit based on monthly rent
+        function calculateDeposit(multiplier) {
+            const rentInput = document.getElementById('monthly-rent');
+            const depositInput = document.getElementById('deposit-amount');
+            
+            if (rentInput && depositInput && rentInput.value) {
+                const rent = parseFloat(rentInput.value);
+                const deposit = rent * multiplier;
+                depositInput.value = deposit;
+                showToast(`✅ Deposit set to ${multiplier}x monthly rent: $${deposit}`, 'success');
+            } else {
+                showToast('Please enter monthly rent amount first', 'warning');
             }
         }
 
@@ -958,34 +1234,37 @@
             console.log(`🎬 DEMO: Switching to ${perspective} perspective`);
             appState.currentPerspective = perspective;
             
-            // Update button styles
-            const tenantBtn = document.getElementById('tenant-view-btn');
-            const landlordBtn = document.getElementById('landlord-view-btn');
+            // Update dropdown to reflect current selection
+            const perspectiveSelect = document.getElementById('perspective-select');
+            if (perspectiveSelect) {
+                perspectiveSelect.value = perspective;
+            }
+            
+            // Update wallet button text and behavior
+            const walletBtn = document.getElementById('wallet-connect-btn');
+            if (walletBtn && !userWallet) {
+                walletBtn.textContent = '🚀 CREATE WALLET';
+                walletBtn.onclick = () => createUserWallet(perspective);
+            }
             
             if (perspective === 'tenant') {
-                tenantBtn.className = 'px-3 py-1 text-xs font-medium bg-blue-600 text-white rounded transition';
-                landlordBtn.className = 'px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-800 rounded transition';
+                showToast(`👤 Now viewing as TENANT - You can pay rent and manage your rental!`, 'info');
                 
-                // Update wallet button for tenant
-                const walletBtn = document.getElementById('wallet-connect-btn');
-                if (walletBtn && !userWallet) {
-                    walletBtn.textContent = 'Create Tenant Wallet';
-                    walletBtn.onclick = () => createUserWallet('tenant');
+                // Show encouraging hint if user has escrows
+                if (appState.activeEscrows.length > 0) {
+                    setTimeout(() => {
+                        showToast(`💡 Tip: Try paying rent to see real-time notifications!`, 'info');
+                    }, 2000);
                 }
-                
-                showToast(`🏃 Switched to Tenant View - Make payments & build credit!`, 'info');
             } else {
-                landlordBtn.className = 'px-3 py-1 text-xs font-medium bg-green-600 text-white rounded transition';
-                tenantBtn.className = 'px-3 py-1 text-xs font-medium text-gray-600 hover:text-gray-800 rounded transition';
+                showToast(`🏠 Now viewing as LANDLORD - You receive payments and manage properties!`, 'success');
                 
-                // Update wallet button for landlord
-                const walletBtn = document.getElementById('wallet-connect-btn');
-                if (walletBtn && !userWallet) {
-                    walletBtn.textContent = 'Create Landlord Wallet';
-                    walletBtn.onclick = () => createUserWallet('landlord');
+                // Show encouraging hint for landlord view
+                if (appState.activeEscrows.length > 0) {
+                    setTimeout(() => {
+                        showToast(`💡 Tip: Watch payment notifications appear in real-time!`, 'success');
+                    }, 2000);
                 }
-                
-                showToast(`🏠 Switched to Landlord View - Monitor payments & manage properties!`, 'info');
             }
             
             // Re-render current screen with new perspective
@@ -1019,21 +1298,31 @@
         // --- TESTING GUIDE SYSTEM ---
         
         function toggleTestingGuide() {
+            console.log('🔧 DEBUG: toggleTestingGuide called');
             const sidebar = document.getElementById('guide-sidebar');
             const modal = document.getElementById('guide-modal');
             const appContainer = document.getElementById('app-container');
             
+            if (!sidebar) {
+                console.error('❌ ERROR: guide-sidebar not found');
+                return;
+            }
+            
             // Close modal if open
-            modal.classList.add('hidden');
+            if (modal) {
+                modal.classList.add('hidden');
+            }
             
             // Toggle sidebar and adjust main container
             if (sidebar.classList.contains('hidden')) {
+                console.log('📖 Opening testing guide');
                 sidebar.classList.remove('hidden');
-                appContainer.classList.add('guide-open');
+                if (appContainer) appContainer.classList.add('guide-open');
                 showToast('📖 Testing guide opened! Follow along while you test.', 'info');
             } else {
+                console.log('📖 Closing testing guide');
                 sidebar.classList.add('hidden');
-                appContainer.classList.remove('guide-open');
+                if (appContainer) appContainer.classList.remove('guide-open');
                 showToast('📖 Testing guide closed.', 'info');
             }
         }
@@ -1350,99 +1639,377 @@
         function renderBridgeScreen() {
             return `
                 <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-gray-700 mb-6">1️⃣ Bridge USDC → Arc (CCTP)</h2>
+                    <!-- Progress Indicator -->
+                    <div class="bg-green-50 border border-green-300 rounded-xl p-4">
+                        <h2 class="text-2xl font-bold text-green-800 mb-2">Step 2: Fund Your Wallet</h2>
+                        <p class="text-green-700">You need USDC to create rental escrows and pay rent. Let's get you funded!</p>
+                    </div>
+
+                    <!-- What's Happening Explanation -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                        <h3 class="font-bold text-blue-800 mb-2">🌉 What's happening:</h3>
+                        <div class="text-sm text-blue-700 space-y-1">
+                            <p>• Your Circle wallet will receive demo USDC</p>
+                            <p>• We'll use Circle's CCTP to bridge to Arc chain</p>
+                            <p>• This shows real cross-chain functionality!</p>
+                        </div>
+                    </div>
 
                     <!-- Arc Dev Wallet Status -->
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <div class="bg-white p-6 rounded-xl border border-gray-200 shadow-md">
                         <div class="flex justify-between items-start">
                             <div>
-                                <h3 class="text-lg font-semibold text-blue-700">Arc Dev Wallet Status</h3>
-                                <p class="text-sm text-gray-600">Address: ${truncateAddress(DEV_WALLET_ADDRESS)}</p>
-                                <p id="arc-balance" class="text-2xl font-extrabold text-blue-800 mt-2">
-                                    Balance: ${formatCurrency(appState.arcDevBalance)}
+                                <h3 class="text-lg font-semibold text-gray-700">💰 Your Wallet Balance</h3>
+                                <p class="text-sm text-gray-500 mb-2">Address: ${truncateAddress(currentAccount || 'Not Connected')}</p>
+                                <p id="arc-balance" class="text-3xl font-extrabold text-green-600">
+                                    ${formatCurrency(appState.arcDevBalance)} USDC
                                 </p>
-                                <p class="text-xs mt-1 text-blue-600">Auto-fills the balance after successful bridge.</p>
+                                ${appState.arcDevBalance < 50 ? `
+                                    <p class="text-sm text-red-600 mt-1">⚠️ You need at least $50 to create escrows</p>
+                                ` : `
+                                    <p class="text-sm text-green-600 mt-1">✅ Ready to create escrows!</p>
+                                `}
                             </div>
                             <div class="text-right">
-                                <div class="text-xs font-medium ${currentAccount ? (currentAccount.toLowerCase() === DEV_WALLET_CONFIG.address.toLowerCase() ? 'text-red-600' : 'text-green-600') : 'text-gray-500'}">
-                                    ${currentAccount ? (currentAccount.toLowerCase() === DEV_WALLET_CONFIG.address.toLowerCase() ? '� DEV WALLET' : '�🟢 User Wallet') : '⚫ Demo Mode'}
-                                </div>
-                                <div class="text-xs ${CONTRACT_ADDRESSES.RentCreditEscrow !== '0x0000000000000000000000000000000000000000' ? 'text-green-600' : 'text-orange-500'}">
-                                    ${CONTRACT_ADDRESSES.RentCreditEscrow !== '0x0000000000000000000000000000000000000000' ? '🟢 Contracts Deployed' : '🟡 Contracts Pending'}
-                                </div>
+                                <div class="text-xs font-medium text-green-600">🟢 Circle Wallet</div>
+                                <div class="text-xs text-green-600">🟢 CCTP Ready</div>
                             </div>
                         </div>
                     </div>
 
-                    <form id="bridge-form" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-inner">
-                        <div class="flex flex-col">
-                            <label for="amount" class="text-sm font-medium text-gray-700 mb-1">Input Amount (USDC)</label>
-                            <input type="number" id="amount" name="amount" min="10" max="10000" value="1000" required
-                                class="p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150 text-xl font-bold"
-                                placeholder="e.g., 1000">
-                            <p class="text-xs text-gray-500 mt-1">💡 Suggested: $1000 for rent deposits, $500 for small escrows</p>
+                    <form id="bridge-form" class="space-y-6 bg-gradient-to-br from-purple-50 to-blue-50 p-6 rounded-xl shadow-lg border border-purple-200">
+                        <div class="text-center mb-4">
+                            <h3 class="text-xl font-bold text-purple-800">Get Demo USDC</h3>
+                            <p class="text-sm text-purple-600">Choose how much demo USDC you want</p>
                         </div>
 
                         <div class="flex flex-col">
-                            <label for="source-chain" class="text-sm font-medium text-gray-700 mb-1">Select Source Chain</label>
-                            <select id="source-chain" name="source-chain" disabled
-                                class="p-3 border border-gray-300 rounded-lg bg-white opacity-75">
-                                <option value="ethereum">Ethereum (Selected)</option>
-                            </select>
+                            <label for="amount" class="text-sm font-medium text-gray-700 mb-2">Amount (USDC)</label>
+                            <input type="number" id="amount" name="amount" min="10" max="10000" value="100" required
+                                class="p-4 border-2 border-purple-300 rounded-xl focus:ring-purple-500 focus:border-purple-500 transition duration-150 text-xl font-bold text-center"
+                                placeholder="100">
+                            
+                            <!-- Quick Amount Buttons -->
+                            <div class="flex space-x-2 mt-2">
+                                <button type="button" onclick="document.getElementById('amount').value = 100" class="flex-1 py-2 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200">
+                                    $100 (Quick Start)
+                                </button>
+                                <button type="button" onclick="document.getElementById('amount').value = 500" class="flex-1 py-2 bg-blue-100 text-blue-700 rounded-lg text-sm hover:bg-blue-200">
+                                    $500 (Multiple Escrows)
+                                </button>
+                                <button type="button" onclick="document.getElementById('amount').value = 1000" class="flex-1 py-2 bg-purple-100 text-purple-700 rounded-lg text-sm hover:bg-purple-200">
+                                    $1000 (Full Demo)
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-600 mt-2 text-center">💡 Recommendation: $100 is perfect for testing!</p>
                         </div>
 
-                        <button type="submit" id="bridge-button" class="w-full py-3 btn-primary text-white font-bold text-lg rounded-xl shadow-lg transition duration-150">
-                            Bridge Now
+                        <button type="submit" id="bridge-button" class="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold text-xl rounded-xl shadow-lg hover:shadow-xl transition duration-150 transform hover:-translate-y-1">
+                            🚀 Fund Wallet & Bridge to Arc
                         </button>
                         <div id="bridge-status" class="text-center pt-2 min-h-[20px] text-sm text-gray-600"></div>
                     </form>
 
-                    <button onclick="renderScreen('createEscrow')" class="w-full text-center py-2 text-blue-600 hover:text-blue-800 transition duration-150 font-medium border border-blue-200 rounded-lg">
-                        Go to Screen 2: Create Escrow
-                    </button>
+                    <!-- What's Next -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+                        <h3 class="font-bold text-yellow-800 mb-2">⏭️ What happens next:</h3>
+                        <p class="text-sm text-yellow-700">After funding, you'll automatically move to Step 3: Create your first rental escrow!</p>
+                    </div>
                 </div>
             `;
         }
 
         function renderCreateEscrowScreen() {
             return `
-                <div class="space-y-6">
-                    <h2 class="text-2xl font-bold text-gray-700 mb-6">2️⃣ Create Rental Escrow</h2>
+                <div class="space-y-12">
+                    <!-- Progress Indicator -->
+                    <div class="bg-purple-50 border border-purple-300 rounded-xl p-8">
+                        <h2 class="text-3xl font-bold text-purple-800 mb-4">Step 3: Create Your Rental Agreement</h2>
+                        <p class="text-purple-700 text-lg">Set up a rental escrow agreement. You can use real values or try our demo presets!</p>
+                    </div>
 
-                    <form id="escrow-form" class="space-y-4 bg-gray-50 p-6 rounded-lg shadow-inner">
+                    <!-- What's This For -->
+                    <div class="bg-blue-50 border border-blue-200 rounded-xl p-8">
+                        <h3 class="font-bold text-blue-800 mb-4 text-xl">🏠 What you're creating:</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-base text-blue-700">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-base">🔒</span>
+                                <span><strong>Smart Contract Escrow:</strong> Holds security deposit safely</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-lg">💰</span>
+                                <span><strong>Automated Payments:</strong> Monthly rent via Circle wallet</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-lg">🔄</span>
+                                <span><strong>Dual Perspective:</strong> Switch to see landlord's view</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-lg">⚡</span>
+                                <span><strong>Real-time Updates:</strong> Live notifications</span>
+                            </div>
+                        </div>
+                    </div>
 
-                        <!-- Landlord Address -->
-                        <div class="flex flex-col">
-                            <label for="landlord-address" class="text-sm font-medium text-gray-700 mb-1">Landlord Address</label>
-                            <input type="text" id="landlord-address" name="landlord-address" required
-                                class="p-3 border border-gray-300 rounded-lg"
-                                value="0xLandlordAddressABC1234567890" placeholder="0x...">
+                    <!-- Quick Setup Options -->
+                    <div class="bg-green-50 border border-green-200 rounded-xl p-6">
+                        <h4 class="font-bold text-green-800 mb-4 text-lg">🚀 Quick Demo Setup (Optional):</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <button type="button" onclick="fillDemoValues('apartment')" class="p-4 bg-green-100 text-green-800 rounded-xl text-sm hover:bg-green-200 transition border border-green-300">
+                                <div class="font-bold mb-2">🏠 Urban Apartment</div>
+                                <div class="text-xs space-y-1">
+                                    <div>Rent: $1,250/mo</div>
+                                    <div>Deposit: $2,500</div>
+                                    <div>Term: 6 months</div>
+                                </div>
+                            </button>
+                            <button type="button" onclick="fillDemoValues('house')" class="p-4 bg-blue-100 text-blue-800 rounded-xl text-sm hover:bg-blue-200 transition border border-blue-300">
+                                <div class="font-bold mb-2">🏡 Family House</div>
+                                <div class="text-xs space-y-1">
+                                    <div>Rent: $2,100/mo</div>
+                                    <div>Deposit: $4,200</div>
+                                    <div>Term: 12 months</div>
+                                </div>
+                            </button>
+                            <button type="button" onclick="fillDemoValues('studio')" class="p-4 bg-purple-100 text-purple-800 rounded-xl text-sm hover:bg-purple-200 transition border border-purple-300">
+                                <div class="font-bold mb-2">🏙️ Downtown Studio</div>
+                                <div class="text-xs space-y-1">
+                                    <div>Rent: $875/mo</div>
+                                    <div>Deposit: $1,750</div>
+                                    <div>Term: 6 months</div>
+                                </div>
+                            </button>
+                        </div>
+                        <p class="text-sm text-green-600 text-center">↑ Click any preset to auto-fill, or enter your own values below</p>
+                    </div>
+
+                    <!-- Rental Agreement Form -->
+                    <form id="escrow-form" class="space-y-8 bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+                        <div class="text-center border-b border-gray-200 pb-6">
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">📝 Rental Agreement Details</h3>
+                            <p class="text-base text-gray-600">Enter the rental terms for your agreement</p>
                         </div>
 
-                        <!-- Amounts -->
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            ${renderInputField('deposit-amount', 'Security Deposit ($)', 'number', '', 'min="500" max="25000" placeholder="Usually 1-2x monthly rent (e.g., 2500)" required')}
-                            ${renderInputField('monthly-rent', 'Monthly Rent ($)', 'number', '', 'min="200" max="10000" placeholder="e.g., 1250, 875, 2100" required')}
-                            ${renderInputField('damage-threshold', 'Damage Threshold ($)', 'number', 500, 'min="50" required')}
+                        <!-- Landlord Section -->
+                        <div class="bg-gray-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-gray-800 mb-4 text-lg">🏠 Landlord Information</h4>
+                            <div>
+                                <label for="landlord-address" class="block text-base font-bold text-gray-700 mb-3">Landlord's Wallet Address</label>
+                                <input type="text" id="landlord-address" name="landlord-address" required
+                                    class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition text-lg"
+                                    value="0xLandlordDemo1234567890ABCDEF" placeholder="0x...">
+                                <p class="text-sm text-gray-500 mt-2">Demo landlord address (in real app, they'd provide this)</p>
+                            </div>
                         </div>
 
-                        <!-- Duration -->
-                        ${renderInputField('duration', 'Tenancy Duration (Months)', 'number', 12, 'min="1" required')}
+                        <!-- Rent Payment Box -->
+                        <div class="bg-green-50 p-6 rounded-lg border-2 border-green-200">
+                            <h4 class="font-bold text-gray-800 mb-6 text-lg">💳 Rent Payment</h4>
+                            
+                            <div class="mb-6">
+                                <label for="rent-payment-amount" class="block text-base font-bold text-gray-700 mb-3">Monthly Rent Payment</label>
+                                <div class="flex space-x-3">
+                                    <input type="number" id="rent-payment-amount" name="rent-payment-amount" required
+                                        class="flex-1 p-4 border-2 border-green-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-200 transition text-xl font-semibold"
+                                        min="200" max="10000" placeholder="Enter monthly rent" value="1250">
+                                    <button type="button" onclick="payMonthlyRent()" class="px-6 py-4 bg-green-500 text-white rounded-lg text-base hover:bg-green-600 transition font-bold shadow-lg">
+                                        💰 PAY RENT
+                                    </button>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-2">Click to pay your monthly rent via smart contract</p>
+                            </div>
 
-                        <div class="pt-4 space-y-3">
-                            <h3 class="text-md font-bold text-gray-700">Contract Requirements:</h3>
-                            ${renderCheckbox('require-inspection', 'Require 3rd-party Inspection', true)}
-                            ${renderCheckbox('require-tenant-confirmation', 'Require Tenant Confirmation (Manual Release)', false)}
+                            <div class="bg-green-100 p-4 rounded-lg">
+                                <p class="text-green-800 font-bold text-sm">🔒 Secure payments via Circle Programmable Wallets</p>
+                                <p class="text-green-700 text-sm mt-1">All transactions are recorded on-chain for transparency</p>
+                            </div>
                         </div>
 
-                        <button type="submit" id="create-escrow-button" class="w-full py-3 bg-green-600 text-white font-bold text-lg rounded-xl shadow-lg hover:bg-green-700 transition duration-150">
-                            Create Escrow Contract
-                        </button>
+                        <!-- Currency Selection Dialog -->
+                        <div class="bg-yellow-50 p-6 rounded-lg border-2 border-yellow-200">
+                            <h4 class="font-bold text-gray-800 mb-6 text-lg">🪙 Stablecoin Selection</h4>
+                            
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <!-- USDC Option -->
+                                <div class="bg-white border-2 border-gray-300 rounded-lg p-4 cursor-pointer hover:border-blue-500 transition" onclick="selectCurrency('USDC')">
+                                    <div class="flex items-center space-x-3 mb-3">
+                                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                            <span class="text-2xl">💵</span>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-bold text-gray-800">USDC</h5>
+                                            <p class="text-sm text-gray-600">US Dollar Coin</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                        <p>✓ Fully backed by US Dollar</p>
+                                        <p>✓ Most widely supported</p>
+                                        <p>✓ Low transaction fees</p>
+                                    </div>
+                                </div>
+
+                                <!-- EURC Option -->
+                                <div class="bg-white border-2 border-gray-300 rounded-lg p-4 cursor-pointer hover:border-purple-500 transition" onclick="selectCurrency('EURC')">
+                                    <div class="flex items-center space-x-3 mb-3">
+                                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                                            <span class="text-2xl">🇪🇺</span>
+                                        </div>
+                                        <div>
+                                            <h5 class="font-bold text-gray-800">EURC</h5>
+                                            <p class="text-sm text-gray-600">Euro Coin</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-xs text-gray-500">
+                                        <p>✓ Fully backed by Euro</p>
+                                        <p>✓ European regulation compliant</p>
+                                        <p>✓ Cross-border payments</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center">
+                                <p class="text-yellow-700 font-bold" id="selected-currency-display">Selected: USDC (US Dollar Coin)</p>
+                            </div>
+                        </div>
+
+                        <!-- Tenancy Duration Box -->
+                        <div class="bg-purple-50 p-6 rounded-lg border-2 border-purple-200">
+                            <h4 class="font-bold text-gray-800 mb-6 text-lg">⏱️ Tenancy Duration</h4>
+                            
+                            <div class="mb-4">
+                                <label for="tenancy-duration" class="block text-base font-bold text-gray-700 mb-3">Select Lease Duration</label>
+                                <select id="tenancy-duration" name="tenancy-duration" required
+                                    class="w-full p-4 border-2 border-purple-300 rounded-lg focus:border-purple-500 focus:ring-1 focus:ring-purple-200 transition font-semibold text-lg bg-white">
+                                    <option value="">-- Choose Duration --</option>
+                                    <option value="3">3 months (Short-term lease)</option>
+                                    <option value="6" selected>6 months (Standard lease)</option>
+                                    <option value="9">9 months (Extended lease)</option>
+                                    <option value="12">12 months (Annual lease)</option>
+                                </select>
+                                <p class="text-sm text-gray-500 mt-2">Duration affects total escrow amount and contract terms</p>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-purple-100 p-3 rounded-lg">
+                                    <p class="text-purple-800 font-bold text-sm">📊 Total Contract Value</p>
+                                    <p class="text-purple-700 text-lg font-bold" id="total-contract-value">$7,500</p>
+                                </div>
+                                <div class="bg-purple-100 p-3 rounded-lg">
+                                    <p class="text-purple-800 font-bold text-sm">🏁 Contract End Date</p>
+                                    <p class="text-purple-700 text-sm font-bold" id="contract-end-date">June 2026</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Financial Terms - VERTICAL Layout -->
+                        <div class="bg-blue-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-gray-800 mb-6 text-lg">💰 Financial Terms</h4>
+                            
+                            <!-- Row 1: Monthly Rent -->
+                            <div class="mb-6">
+                                <label for="monthly-rent" class="block text-base font-bold text-gray-700 mb-3">🏠 Monthly Rent Amount</label>
+                                <input type="number" id="monthly-rent" name="monthly-rent" required
+                                    class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition text-xl font-semibold"
+                                    min="200" max="10000" placeholder="e.g. 1250" value="1250">
+                                <p class="text-sm text-gray-500 mt-2">Monthly rental payment amount</p>
+                            </div>
+
+                            <!-- Row 2: Payment Currency -->
+                            <div class="mb-6">
+                                <label for="payment-currency" class="block text-base font-bold text-gray-700 mb-3">💱 Payment Currency</label>
+                                <select id="payment-currency" name="payment-currency" required
+                                    class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition font-semibold text-lg">
+                                    <option value="USDC" selected>💵 USDC (US Dollar Coin)</option>
+                                    <option value="EURC">🇪🇺 EURC (Euro Coin)</option>
+                                </select>
+                                <p class="text-sm text-gray-500 mt-2">Stablecoin for rent payments</p>
+                            </div>
+
+                            <!-- Row 3: Security Deposit -->
+                            <div class="mb-6">
+                                <label for="deposit-amount" class="block text-base font-bold text-gray-700 mb-3">💰 Security Deposit Amount</label>
+                                <div class="flex space-x-3 mb-3">
+                                    <input type="number" id="deposit-amount" name="deposit-amount" required
+                                        class="flex-1 p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition text-xl font-semibold"
+                                        min="500" max="25000" placeholder="e.g. 2500" value="2500">
+                                    <button type="button" onclick="calculateDeposit(1)" class="px-6 py-4 bg-green-100 text-green-700 rounded-lg text-base hover:bg-green-200 transition font-bold">
+                                        1x Rent
+                                    </button>
+                                    <button type="button" onclick="calculateDeposit(2)" class="px-6 py-4 bg-blue-100 text-blue-700 rounded-lg text-base hover:bg-blue-200 transition font-bold">
+                                        2x Rent
+                                    </button>
+                                </div>
+                                <p class="text-sm text-gray-500">Usually 1-2x monthly rent</p>
+                            </div>
+
+                            <!-- Row 4: Damage Threshold -->
+                            <div class="mb-6">
+                                <label for="damage-threshold" class="block text-base font-bold text-gray-700 mb-3">⚠️ Damage Threshold</label>
+                                <input type="number" id="damage-threshold" name="damage-threshold" required
+                                    class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition text-xl font-semibold"
+                                    min="50" placeholder="e.g. 500" value="500">
+                                <p class="text-sm text-gray-500 mt-2">Maximum deduction from deposit for damages</p>
+                            </div>
+
+                            <!-- Row 5: Payment Schedule -->
+                            <div>
+                                <label for="payment-schedule" class="block text-base font-bold text-gray-700 mb-3">📅 Rent Payment Schedule</label>
+                                <select id="payment-schedule" name="payment-schedule" required
+                                    class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition font-semibold text-lg">
+                                    <option value="monthly" selected>📅 Monthly (Every 30 days)</option>
+                                    <option value="quarterly">🗓️ Quarterly (Every 3 months)</option>
+                                    <option value="semi-annual">📆 Semi-Annual (Every 6 months)</option>
+                                    <option value="annual">🎯 Annual (Yearly)</option>
+                                </select>
+                                <p class="text-sm text-gray-500 mt-2">How often rent payments are due</p>
+                            </div>
+                        </div>
+
+                        <!-- Lease Terms - VERTICAL Layout -->
+                        <div class="bg-purple-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-gray-800 mb-6 text-lg">📅 Lease Duration</h4>
+                            
+                            <!-- Tenancy Duration -->
+                            <div class="mb-6">
+                                <label for="duration" class="block text-base font-bold text-gray-700 mb-3">Duration</label>
+                                <select id="duration" name="duration" required
+                                    class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition font-semibold text-lg">
+                                    <option value="3">3 months (Short-term)</option>
+                                    <option value="6" selected>6 months (Standard)</option>
+                                    <option value="9">9 months (Extended)</option>
+                                    <option value="12">12 months (1 year)</option>
+                                    <option value="18">18 months</option>
+                                    <option value="24">24 months (2 years)</option>
+                                </select>
+                                <p class="text-sm text-gray-500 mt-2">Total length of rental agreement</p>
+                            </div>
+
+                            <!-- Contract Options -->
+                            <div>
+                                <label class="block text-base font-bold text-gray-700 mb-4">⚙️ Contract Options</label>
+                                <div class="space-y-4">
+                                    ${renderCheckbox('require-inspection', '🔍 Require 3rd-party Inspection', true)}
+                                    ${renderCheckbox('require-tenant-confirmation', '✋ Manual Deposit Release', false)}
+                                    ${renderCheckbox('auto-renewal', '🔄 Auto-renewal Option', false)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center pt-4">
+                            <button type="submit" id="create-escrow-button" 
+                                class="px-8 py-3 bg-gradient-to-r from-green-600 to-blue-600 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition duration-150 transform hover:-translate-y-1">
+                                🚀 Create Smart Contract Escrow
+                            </button>
+                            <p class="text-xs text-gray-500 mt-2">This creates a blockchain escrow that holds your security deposit safely</p>
+                        </div>
                     </form>
 
-                    <button onclick="renderScreen('dashboard')" class="w-full text-center py-2 text-blue-600 hover:text-blue-800 transition duration-150 font-medium border border-blue-200 rounded-lg">
-                        Go to Screen 3: Dashboard
-                    </button>
+                    <!-- What's Next -->
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+                        <h3 class="font-bold text-yellow-800 mb-3 text-lg">⏭️ After creating the escrow:</h3>
+                        <p class="text-yellow-700">You'll see the active rental dashboard where you can pay rent, switch perspectives, and test all features!</p>
+                    </div>
                 </div>
             `;
         }
@@ -1469,6 +2036,183 @@
         }
 
         function renderDashboardScreen() {
+            // Check if user has a wallet yet
+            const hasWallet = currentAccount && currentAccount !== '';
+            const hasEscrows = appState.activeEscrows && appState.activeEscrows.length > 0;
+
+            // First-time user experience - no wallet created yet
+            if (!hasWallet) {
+                return `
+                    <div class="max-w-4xl mx-auto space-y-6">
+                        <!-- Welcome Form Card -->
+                        <div class="glass rounded-2xl p-8 border border-blue-200/50 shadow-xl">
+                            <div class="text-center mb-8">
+                                <div class="inline-flex items-center space-x-3 mb-4">
+                                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                                        <span class="text-2xl">🏠</span>
+                                    </div>
+                                    <div>
+                                        <h2 class="text-3xl font-black text-gray-800">Get Started with CrossRent</h2>
+                                        <p class="text-gray-600">Circle Programmable Wallets Demo</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 1 Form Section -->
+                            <div class="glass-dark rounded-xl p-6 border border-yellow-300/50 mb-6">
+                                <div class="flex items-start space-x-4">
+                                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <span class="text-white font-black">1</span>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="text-xl font-black text-gray-800 mb-2">Create Your Circle Wallet</h3>
+                                        <p class="text-gray-600 mb-4">First, we need to create your programmable wallet to get started</p>
+                                        
+                                        <div class="bg-yellow-100/50 rounded-lg p-4 border border-yellow-300/30 mb-4">
+                                            <p class="text-sm text-yellow-800 font-medium">
+                                                👆 <strong>Action Required:</strong> Click the glowing "🚀 CREATE WALLET" button in the top-right corner
+                                            </p>
+                                        </div>
+                                        
+                                        <div class="text-sm text-gray-500">
+                                            <p>✓ Instant wallet creation with Circle</p>
+                                            <p>✓ No complex setup required</p>
+                                            <p>✓ Ready for demo in seconds</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Next Steps Preview -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="glass-dark rounded-xl p-4 border border-green-200/50 opacity-60">
+                                    <div class="flex items-center space-x-3 mb-3">
+                                        <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-black text-sm">2</span>
+                                        </div>
+                                        <h4 class="font-black text-gray-800">Fund Wallet</h4>
+                                    </div>
+                                    <p class="text-sm text-gray-600">Get demo USDC and bridge to Arc chain</p>
+                                </div>
+                                
+                                <div class="glass-dark rounded-xl p-4 border border-purple-200/50 opacity-40">
+                                    <div class="flex items-center space-x-3 mb-3">
+                                        <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                                            <span class="text-white font-black text-sm">3</span>
+                                        </div>
+                                        <h4 class="font-black text-gray-800">Create Rental</h4>
+                                    </div>
+                                    <p class="text-sm text-gray-600">Set up your first rental agreement</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Features Overview Card -->
+                        <div class="glass rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                            <h3 class="text-lg font-black text-gray-800 mb-4 text-center">What You'll Experience</h3>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div class="text-center">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                                        <span class="text-xl">🏦</span>
+                                    </div>
+                                    <p class="text-sm font-bold text-gray-700">Circle Wallets</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                                        <span class="text-xl">💰</span>
+                                    </div>
+                                    <p class="text-sm font-bold text-gray-700">USDC Funding</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                                        <span class="text-xl">🌉</span>
+                                    </div>
+                                    <p class="text-sm font-bold text-gray-700">CCTP Bridge</p>
+                                </div>
+                                <div class="text-center">
+                                    <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                                        <span class="text-xl">🔄</span>
+                                    </div>
+                                    <p class="text-sm font-bold text-gray-700">Dual View</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Help Actions Card -->
+                        <div class="glass rounded-2xl p-6 border border-gray-200/50 shadow-lg">
+                            <div class="text-center">
+                                <h3 class="text-lg font-black text-gray-800 mb-4">Need Help?</h3>
+                                <div class="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4">
+                                    <button onclick="toggleTestingGuide()" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-xl hover:shadow-lg transition transform hover:-translate-y-1">
+                                        📖 Step-by-Step Guide
+                                    </button>
+                                    <button onclick="showFeedbackModal()" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-green-600 text-white font-bold rounded-xl hover:shadow-lg transition transform hover:-translate-y-1">
+                                        💬 Ask Questions
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // User has wallet but no escrows yet
+            if (hasWallet && !hasEscrows) {
+                return `
+                    <div class="space-y-6">
+                        <!-- Progress Indicator -->
+                        <div class="bg-green-50 border border-green-300 rounded-xl p-4 text-center">
+                            <h2 class="text-xl font-bold text-green-800 mb-2">✅ Great! Wallet Created Successfully</h2>
+                            <p class="text-green-700">Balance: <strong>${formatCurrency(appState.arcDevBalance || 0)} USDC</strong></p>
+                        </div>
+
+                        <!-- Next Steps -->
+                        <div class="bg-blue-50 border-2 border-blue-300 rounded-xl p-6">
+                            <div class="text-center">
+                                <h2 class="text-2xl font-bold text-blue-800 mb-3">🚀 Step 2: Create Your First Rental</h2>
+                                <p class="text-lg text-blue-700 mb-4">Let's set up a rental escrow to see the magic happen!</p>
+                                
+                                ${appState.arcDevBalance >= 50 ? `
+                                    <button onclick="renderScreen('createEscrow')" class="px-8 py-4 bg-blue-600 text-white text-xl font-bold rounded-xl hover:bg-blue-700 transition shadow-lg">
+                                        🏠 Create Rental Escrow
+                                    </button>
+                                    <p class="text-xs text-blue-600 mt-2">This will set up a demo rental agreement</p>
+                                ` : `
+                                    <button onclick="renderScreen('bridge')" class="px-8 py-4 bg-green-600 text-white text-xl font-bold rounded-xl hover:bg-green-700 transition shadow-lg">
+                                        💰 Get USDC First
+                                    </button>
+                                    <p class="text-xs text-green-600 mt-2">You need at least $50 USDC to create escrows</p>
+                                `}
+                            </div>
+                        </div>
+
+                        <!-- Demo Preview -->
+                        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                            <h3 class="font-bold text-gray-700 mb-3 text-center">🎯 What You'll Test Next:</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                <div class="flex items-center space-x-2">
+                                    <span>✅</span>
+                                    <span>Tenant perspective: Create escrow & pay rent</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span>✅</span>
+                                    <span>Landlord perspective: Receive payments</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span>✅</span>
+                                    <span>Real-time notifications between views</span>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <span>✅</span>
+                                    <span>Multisig dispute resolution</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // User has wallet and escrows - show full dashboard
             const activeEscrowsHtml = appState.activeEscrows.map(escrow => `
                 <div class="bg-white p-5 border border-gray-200 rounded-xl shadow-md space-y-3 card-enhanced">
                     <div class="flex justify-between items-center pb-2 border-b border-gray-100">
@@ -1492,20 +2236,20 @@
                             <p class="text-center text-sm font-medium text-gray-700 mb-3">Next Payment Due: ${escrow.nextPaymentDue}</p>
                             ${appState.currentPerspective === 'tenant' ? `
                                 <button onclick="handleRentPayment(${escrow.id})" class="w-full py-2 mb-2 btn-success text-white font-semibold rounded-lg transition">
-                                    Pay Rent (${formatCurrency(escrow.rent)})
+                                    💳 Pay Rent (${formatCurrency(escrow.rent)})
                                 </button>
                             ` : ''}
                             <div class="flex space-x-2">
                                 <button onclick="handleDispute(${escrow.id})" class="flex-1 py-2 text-sm bg-yellow-100 text-yellow-700 font-semibold rounded-lg hover:bg-yellow-200 transition">
-                                    Open Dispute
+                                    ⚖️ Open Dispute
                                 </button>
                                 ${escrow.paidMonths >= escrow.durationMonths && !escrow.depositReleased ? `
                                     <button onclick="handleReleaseDeposit(${escrow.id})" class="flex-1 py-2 text-sm bg-green-100 text-green-700 font-semibold rounded-lg hover:bg-green-200 transition">
-                                        ${appState.currentPerspective === 'landlord' ? 'Release Deposit' : 'Awaiting Release'}
+                                        ${appState.currentPerspective === 'landlord' ? '🔓 Release Deposit' : '⏳ Awaiting Release'}
                                     </button>
                                 ` : `
                                     <button disabled class="flex-1 py-2 text-sm bg-gray-100 text-gray-400 font-semibold rounded-lg cursor-not-allowed">
-                                        ${escrow.depositReleased ? 'Deposit Released' : 'Complete Lease First'}
+                                        ${escrow.depositReleased ? '✅ Deposit Released' : '⏳ Complete Lease First'}
                                     </button>
                                 `}
                             </div>
@@ -1523,12 +2267,12 @@
 
             return `
                 <div class="space-y-8">
-                    <h2 class="text-2xl font-bold text-gray-700">3️⃣ Dashboard & Active Management</h2>
+                    <h2 class="text-2xl font-bold text-gray-700">🎬 Demo Dashboard - Active Rentals</h2>
                     
                     <!-- Perspective Switching Callout -->
                     <div class="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-lg p-3 text-center">
                         <p class="text-sm font-medium text-gray-700">
-                            💡 <strong>Try switching perspectives!</strong> 
+                            � <strong>Try switching perspectives!</strong> 
                             Currently viewing as <span class="font-bold ${appState.currentPerspective === 'tenant' ? 'text-blue-600' : 'text-green-600'}">${appState.currentPerspective.toUpperCase()}</span>
                             - Switch to ${appState.currentPerspective === 'tenant' ? '🏠 Landlord' : '👤 Tenant'} view to see different actions
                         </p>
@@ -1746,9 +2490,12 @@
                     
                     // Update reputation and risk buffer for first-time users
                     if (appState.reputationScore === 0) {
-                        appState.reputationScore = 75; // Starting reputation for creating first escrow
+                        // Use updateReputationScore to update UI & show toast
+                        updateReputationScore(75, 'First escrow created');
+                        // Allocate 10% to risk buffer
                         appState.riskBuffer = escrowData.deposit * 0.1; // 10% of deposit goes to risk buffer
-                        showToast('🎉 Welcome! Starting reputation: 75/100', 'info');
+                        updateSafetyPoolDisplay();
+                        // Extra welcome toast (updateReputationScore already shows toast)
                     }
                     
                     showToast(`Escrow Contract #${escrowData.id} created! TX: ${result.transactionHash.substring(0, 8)}...`, 'success');
@@ -1769,9 +2516,9 @@
                 
                 // Update reputation and risk buffer for first-time users (fallback mode)
                 if (appState.reputationScore === 0) {
-                    appState.reputationScore = 75; // Starting reputation
+                    updateReputationScore(75, 'First escrow (demo)');
                     appState.riskBuffer = escrowData.deposit * 0.1; // 10% of deposit
-                    showToast('🎉 Welcome! Starting reputation: 75/100', 'info');
+                    updateSafetyPoolDisplay();
                 }
                 
                 showToast(`Demo Escrow Contract #${escrowData.id} created! Deposit sent.`, 'success');
@@ -2162,6 +2909,8 @@
         window.createUserWallet = createUserWallet;
         window.submitDispute = submitDispute;
         window.closeDisputeModal = closeDisputeModal;
+        window.fillDemoValues = fillDemoValues;
+        window.calculateDeposit = calculateDeposit;
         
         window.onload = () => {
             console.log('Page loaded, initializing CrossRent with Circle Programmable Wallets...');

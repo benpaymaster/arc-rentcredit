@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen 2: Create Rental Escrow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background-color: #161b22;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            max-width: 800px;
+            width: 100%;
+            border: 1px solid #30363d;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2e8b57, #3cb371);
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 139, 87, 0.3);
+        }
+        .benefit-card {
+            transition: all 0.3s ease;
+        }
+        .benefit-card:hover {
+            transform: translateY(-2px);
+        }
+        .duration-btn {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .duration-btn.active {
+            border-color: #14b8a6;
+            background-color: rgba(20, 184, 166, 0.1);
+            color: #5eead4;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="card rounded-xl p-8 text-white">
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-4xl font-bold text-teal-300">Create Rental Escrow</h1>
+            <div class="flex gap-4">
+                <a href="screen1-bridge.html" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">Bridge</a>
+                <a href="screen3-dashboard.html" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">Dashboard</a>
+            </div>
+        </div>
+
+        <p class="text-lg text-center text-gray-300 mb-8">Smart contracts ensure 100% payment guarantee for landlords, flexible terms for tenants</p>
+
+        <!-- Problems We Solve -->
+        <div class="bg-red-600/10 border border-red-500/30 rounded-xl p-6 mb-8">
+            <h3 class="text-xl font-bold text-red-400 mb-4 text-center">❌ Current Rental Problems</h3>
+            <div class="grid md:grid-cols-2 gap-6 text-sm">
+                <div class="space-y-2">
+                    <div class="text-gray-300">• Landlords force long-term leases (12+ months)</div>
+                    <div class="text-gray-300">• Tenants lose deposits unfairly</div>
+                    <div class="text-gray-300">• No payment guarantees for landlords</div>
+                </div>
+                <div class="space-y-2">
+                    <div class="text-gray-300">• No tenant credit building</div>
+                    <div class="text-gray-300">• Disputes take months to resolve</div>
+                    <div class="text-gray-300">• High security deposits required</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Our Solution Benefits -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="benefit-card bg-green-600/10 border border-green-500/30 rounded-xl p-6">
+                <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mb-4">
+                    🏠
+                </div>
+                <h3 class="text-lg font-bold text-green-400 mb-3">✅ Tenant Benefits</h3>
+                <div class="space-y-2 text-sm text-gray-300">
+                    <div>• <strong>Flexible terms:</strong> 6-month options available</div>
+                    <div>• <strong>Build credit:</strong> On-chain reputation score</div>
+                    <div>• <strong>Earn yield:</strong> 4.2% APY on USDC deposits</div>
+                    <div>• <strong>Lower deposits:</strong> High reputation = 50% less required</div>
+                </div>
+                <div class="bg-green-600/20 border border-green-500/30 rounded p-3 mt-4">
+                    <strong class="text-green-300">🏠 Future Property Purchase:</strong><br/>
+                    <span class="text-sm">800+ reputation score = 1-2% lower mortgage rates<br/>
+                    900+ reputation score = Premium lender access</span>
+                </div>
+            </div>
+
+            <div class="benefit-card bg-blue-600/10 border border-blue-500/30 rounded-xl p-6">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-4">
+                    💰
+                </div>
+                <h3 class="text-lg font-bold text-blue-400 mb-3">✅ Landlord Benefits</h3>
+                <div class="space-y-2 text-sm text-gray-300">
+                    <div>• <strong>100% payment guarantee:</strong> Smart contract enforcement</div>
+                    <div>• <strong>Risk insurance:</strong> Shared risk pool coverage</div>
+                    <div>• <strong>Instant payments:</strong> Automated monthly releases</div>
+                    <div>• <strong>Tenant screening:</strong> On-chain reputation</div>
+                    <div>• <strong>Dispute protection:</strong> Neutral arbitration</div>
+                </div>
+            </div>
+
+            <div class="benefit-card bg-yellow-600/10 border border-yellow-500/30 rounded-xl p-6">
+                <div class="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center mb-4">
+                    📈
+                </div>
+                <h3 class="text-lg font-bold text-yellow-400 mb-3">💰 USDC Financial Gains</h3>
+                <div class="space-y-2 text-sm text-gray-300">
+                    <div>• <strong>USDC yields:</strong> 4.2% APY on all deposits (stable value)</div>
+                    <div>• <strong>Mortgage discounts:</strong> Up to 2% lower interest rates</div>
+                    <div>• <strong>Deposit reduction:</strong> 800+ score = 50% lower deposits</div>
+                    <div>• <strong>Premium access:</strong> Exclusive lender partnerships</div>
+                </div>
+                <div class="bg-yellow-600/20 border border-yellow-500/30 rounded p-3 mt-4">
+                    <strong class="text-yellow-300">📊 Real Example:</strong><br/>
+                    <span class="text-sm">$300k house purchase with 800+ score:<br/>
+                    <span class="text-green-300">Save $6,000/year on mortgage</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Escrow Form -->
+        <div class="space-y-8">
+            <!-- Basic Information -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                    🏠 Property & Participants
+                </h3>
+                
+                <div class="grid gap-6">
+                    <!-- Landlord Address -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">Landlord Address *</label>
+                        <input type="text" value="0x742d35Cc6634C0532925a3b8D0F62292C4e5B74e"
+                               class="w-full p-4 bg-[#24292e] border border-[#30363d] rounded-xl text-white font-mono text-sm focus:border-teal-500 focus:outline-none">
+                    </div>
+
+                    <!-- Property Address -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">Property Address (Optional)</label>
+                        <input type="text" value="123 Student St, Boston, MA"
+                               class="w-full p-4 bg-[#24292e] border border-[#30363d] rounded-xl text-white focus:border-teal-500 focus:outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Terms -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                    💰 Financial Terms
+                </h3>
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Deposit Amount -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">Deposit Amount (USDC) *</label>
+                        <div class="relative">
+                            <input type="number" id="depositAmount" value="5000"
+                                   class="w-full p-4 pr-16 bg-[#24292e] border border-[#30363d] rounded-xl text-white font-bold text-lg focus:border-teal-500 focus:outline-none">
+                            <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-semibold">USDC</span>
+                        </div>
+                    </div>
+
+                    <!-- Duration with Flexible Options -->
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">
+                            Duration (Months) * 
+                            <span class="text-teal-400 text-xs ml-2">⚡ Flexible Terms Available</span>
+                        </label>
+                        <div class="grid grid-cols-3 gap-2 mb-3">
+                            <div class="duration-btn active p-3 rounded-lg border-2 text-center" onclick="selectDuration(6)">
+                                <div class="font-bold">6 mo</div>
+                                <div class="text-xs">Flexible</div>
+                            </div>
+                            <div class="duration-btn p-3 rounded-lg border-2 border-gray-600 text-center" onclick="selectDuration(9)">
+                                <div class="font-bold">9 mo</div>
+                                <div class="text-xs">Popular</div>
+                            </div>
+                            <div class="duration-btn p-3 rounded-lg border-2 border-gray-600 text-center" onclick="selectDuration(12)">
+                                <div class="font-bold">12 mo</div>
+                                <div class="text-xs">Standard</div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-green-600/10 border border-green-500/30 rounded-lg">
+                            <div class="text-sm text-green-300">
+                                <strong>Tenant Power:</strong> Smart contracts give tenants negotiation leverage. 
+                                No more forced 12-month terms - choose what works for you!
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Damage Threshold -->
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-semibold text-gray-300 mb-2">Damage Threshold (USDC) *</label>
+                        <div class="relative">
+                            <input type="number" value="1000"
+                                   class="w-full p-4 pr-16 bg-[#24292e] border border-[#30363d] rounded-xl text-white font-bold text-lg focus:border-teal-500 focus:outline-none">
+                            <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-semibold">USDC</span>
+                        </div>
+                        <p class="text-xs text-gray-400 mt-2">
+                            Maximum deductible amount for property damage claims
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Automation Settings -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-6 flex items-center gap-2">
+                    ⚙️ Automation Settings
+                </h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between p-4 bg-[#24292e] border border-[#30363d] rounded-xl">
+                        <div>
+                            <div class="text-white font-semibold">Require Property Inspection</div>
+                            <div class="text-sm text-gray-400">Mandate professional inspection before move-in</div>
+                        </div>
+                        <input type="checkbox" checked class="w-5 h-5 text-teal-600 bg-[#24292e] border-gray-300 rounded focus:ring-teal-500">
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-[#24292e] border border-[#30363d] rounded-xl">
+                        <div>
+                            <div class="text-white font-semibold">Require Tenant Confirmation</div>
+                            <div class="text-sm text-gray-400">Tenant must confirm each rent payment release</div>
+                        </div>
+                        <input type="checkbox" checked class="w-5 h-5 text-teal-600 bg-[#24292e] border-gray-300 rounded focus:ring-teal-500">
+                    </div>
+
+                    <div class="flex items-center justify-between p-4 bg-[#24292e] border border-[#30363d] rounded-xl">
+                        <div>
+                            <div class="text-white font-semibold">Auto-Release Monthly Rent</div>
+                            <div class="text-sm text-gray-400">Automatically release rent payments on schedule</div>
+                        </div>
+                        <input type="checkbox" checked class="w-5 h-5 text-teal-600 bg-[#24292e] border-gray-300 rounded focus:ring-teal-500">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="p-6 bg-gradient-to-r from-teal-600/20 to-green-600/20 border border-teal-500/30 rounded-xl">
+                <h4 class="text-lg font-semibold text-white mb-4">Escrow Summary</h4>
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                        <div class="text-gray-400">Total Deposit</div>
+                        <div class="text-xl font-bold text-teal-300" id="summaryDeposit">$5,000 USDC</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-400">Duration</div>
+                        <div class="text-xl font-bold text-white" id="summaryDuration">6 months</div>
+                    </div>
+                    <div>
+                        <div class="text-gray-400">Monthly Release</div>
+                        <div class="text-xl font-bold text-white" id="summaryMonthly">$833</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Button -->
+        <button onclick="createEscrow()" id="createButton"
+                class="mt-8 w-full py-6 rounded-xl font-bold text-lg btn-primary text-white shadow-lg flex items-center justify-center">
+            <span id="buttonText">Create Escrow</span>
+            <span class="ml-3">🏠</span>
+        </button>
+
+        <!-- Next Step -->
+        <div class="mt-8 text-center">
+            <a href="screen3-dashboard.html" class="inline-flex items-center gap-3 px-8 py-4 bg-[#161b22] border border-teal-500 text-teal-300 rounded-xl font-semibold hover:bg-teal-500/10 transition-all">
+                📊 View Dashboard →
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let selectedDuration = 6;
+
+        function selectDuration(months) {
+            selectedDuration = months;
+            
+            // Update UI
+            document.querySelectorAll('.duration-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.duration-btn').classList.add('active');
+            
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const deposit = parseInt(document.getElementById('depositAmount').value || 5000);
+            const monthly = Math.round(deposit / selectedDuration);
+            
+            document.getElementById('summaryDeposit').textContent = '$' + deposit.toLocaleString() + ' USDC';
+            document.getElementById('summaryDuration').textContent = selectedDuration + ' months';
+            document.getElementById('summaryMonthly').textContent = '$' + monthly.toLocaleString();
+        }
+
+        async function createEscrow() {
+            const button = document.getElementById('createButton');
+            const buttonText = document.getElementById('buttonText');
+            
+            button.disabled = true;
+            buttonText.textContent = 'Creating Escrow...';
+            button.style.background = '#d97706';
+            
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            buttonText.textContent = 'Escrow Created! ✅';
+            button.style.background = 'linear-gradient(135deg, #16a34a, #22c55e)';
+            
+            setTimeout(() => {
+                window.location.href = 'screen3-dashboard.html';
+            }, 1500);
+        }
+
+        // Initialize
+        document.getElementById('depositAmount').addEventListener('input', updateSummary);
+        updateSummary();
+    </script>
+</body>
+</html>

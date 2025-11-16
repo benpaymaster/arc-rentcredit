@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrossRent Testing Feedback Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #e0e0ff;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        .rating-scale {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .rating-scale input {
+            width: auto;
+        }
+        .rating-scale label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        .submit-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        .submit-btn:hover {
+            transform: scale(1.05);
+        }
+        .motto-check {
+            background: rgba(255, 215, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>🧪 CrossRent User Testing Feedback</h1>
+        
+        <form id="feedbackForm">
+            <div class="form-group">
+                <label for="sessionNumber">Session #:</label>
+                <input type="number" id="sessionNumber" name="sessionNumber" min="1" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cryptoLevel">Your Crypto Experience:</label>
+                <select id="cryptoLevel" name="cryptoLevel" required>
+                    <option value="">Select...</option>
+                    <option value="beginner">Beginner (Little to no crypto experience)</option>
+                    <option value="intermediate">Intermediate (Some crypto knowledge)</option>
+                    <option value="advanced">Advanced (Very familiar with crypto)</option>
+                </select>
+            </div>
+
+            <div class="form-group motto-check">
+                <label for="mottoRecall">🎯 Can you remember the main tagline/motto from the app? (Type what you remember):</label>
+                <input type="text" id="mottoRecall" name="mottoRecall" placeholder="Type the motto you remember..." required>
+            </div>
+
+            <div class="form-group">
+                <label>Was it clear you needed a crypto wallet? (1 = Very Confusing, 10 = Crystal Clear):</label>
+                <div class="rating-scale">
+                    <label><input type="radio" name="walletClarity" value="1" required> 1</label>
+                    <label><input type="radio" name="walletClarity" value="2"> 2</label>
+                    <label><input type="radio" name="walletClarity" value="3"> 3</label>
+                    <label><input type="radio" name="walletClarity" value="4"> 4</label>
+                    <label><input type="radio" name="walletClarity" value="5"> 5</label>
+                    <label><input type="radio" name="walletClarity" value="6"> 6</label>
+                    <label><input type="radio" name="walletClarity" value="7"> 7</label>
+                    <label><input type="radio" name="walletClarity" value="8"> 8</label>
+                    <label><input type="radio" name="walletClarity" value="9"> 9</label>
+                    <label><input type="radio" name="walletClarity" value="10"> 10</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Would you trust this for real rent payments? (1 = Not at all, 10 = Completely):</label>
+                <div class="rating-scale">
+                    <label><input type="radio" name="trustLevel" value="1" required> 1</label>
+                    <label><input type="radio" name="trustLevel" value="2"> 2</label>
+                    <label><input type="radio" name="trustLevel" value="3"> 3</label>
+                    <label><input type="radio" name="trustLevel" value="4"> 4</label>
+                    <label><input type="radio" name="trustLevel" value="5"> 5</label>
+                    <label><input type="radio" name="trustLevel" value="6"> 6</label>
+                    <label><input type="radio" name="trustLevel" value="7"> 7</label>
+                    <label><input type="radio" name="trustLevel" value="8"> 8</label>
+                    <label><input type="radio" name="trustLevel" value="9"> 9</label>
+                    <label><input type="radio" name="trustLevel" value="10"> 10</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Overall experience rating (1 = Terrible, 10 = Amazing):</label>
+                <div class="rating-scale">
+                    <label><input type="radio" name="overallRating" value="1" required> 1</label>
+                    <label><input type="radio" name="overallRating" value="2"> 2</label>
+                    <label><input type="radio" name="overallRating" value="3"> 3</label>
+                    <label><input type="radio" name="overallRating" value="4"> 4</label>
+                    <label><input type="radio" name="overallRating" value="5"> 5</label>
+                    <label><input type="radio" name="overallRating" value="6"> 6</label>
+                    <label><input type="radio" name="overallRating" value="7"> 7</label>
+                    <label><input type="radio" name="overallRating" value="8"> 8</label>
+                    <label><input type="radio" name="overallRating" value="9"> 9</label>
+                    <label><input type="radio" name="overallRating" value="10"> 10</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confusionPoints">What was most confusing or unclear?</label>
+                <textarea id="confusionPoints" name="confusionPoints" rows="3" placeholder="Describe any confusing parts..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="missingFeatures">What would you add or change?</label>
+                <textarea id="missingFeatures" name="missingFeatures" rows="3" placeholder="Suggestions for improvements..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="bestPart">What did you like most?</label>
+                <textarea id="bestPart" name="bestPart" rows="2" placeholder="Favorite features or moments..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="additionalComments">Any other thoughts or quotes?</label>
+                <textarea id="additionalComments" name="additionalComments" rows="3" placeholder="Additional feedback..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Feedback 🚀</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect all form data
+            const formData = new FormData(this);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            
+            // Add timestamp
+            data.timestamp = new Date().toISOString();
+            
+            // Save to localStorage (you can modify this to send to a server)
+            const existingData = JSON.parse(localStorage.getItem('crossrentFeedback') || '[]');
+            existingData.push(data);
+            localStorage.setItem('crossrentFeedback', JSON.stringify(existingData));
+            
+            // Show success message
+            alert('Feedback saved! Thank you for testing CrossRent! 🎉');
+            
+            // Optional: Reset form for next user
+            this.reset();
+            
+            // Optional: Log data for copying
+            console.log('Feedback Data:', JSON.stringify(data, null, 2));
+        });
+
+        // Function to export all feedback data
+        function exportFeedback() {
+            const data = localStorage.getItem('crossrentFeedback');
+            if (data) {
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'crossrent-feedback.json';
+                a.click();
+            }
+        }
+
+        // Add export button (run this in console if needed)
+        // console.log('To export all feedback, run: exportFeedback()');
+    </script>
+</body>
+</html>

@@ -2,80 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    font-family: 'Inter', system-ui, sans-serif;
-    background: #0d1117;
-  }
-  
-  body {
-    background: #0d1117;
-    color: #e6edf3;
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
   }
 }
 
-@layer components {
-  /* Arc Theme Base Colors */
-  :root {
-    --arc-bg: #0d1117;
-    --arc-card: #161b22;
-    --arc-border: #30363d;
-    --arc-muted: #24292e;
-    --arc-text: #e6edf3;
-    --arc-text-muted: #7d8590;
-    --arc-teal: #2ea043;
-    --arc-blue: #1f6feb;
-    --arc-green: #238636;
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom Motto Animations */
+@keyframes fadeInOut {
+  0%, 100% { 
+    opacity: 0.7; 
+    transform: scale(0.98);
+    filter: blur(0.5px);
   }
-  
-  .gradient-bg {
-    background: linear-gradient(135deg, #2ea043 0%, #1f6feb 100%);
+  50% { 
+    opacity: 1; 
+    transform: scale(1);
+    filter: blur(0px);
   }
-  
-  .glass-effect {
-    backdrop-filter: blur(10px);
-    background: rgba(22, 27, 34, 0.8);
-    border: 1px solid rgba(48, 54, 61, 0.5);
+}
+
+@keyframes mottoGlow {
+  0%, 100% { 
+    opacity: 0.8;
+    text-shadow: 0 0 5px rgba(168, 85, 247, 0.3);
   }
-  
-  .btn-primary {
-    @apply bg-gradient-to-r from-teal-600 to-green-600 hover:from-teal-500 hover:to-green-500 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg;
+  50% { 
+    opacity: 1;
+    text-shadow: 0 0 15px rgba(168, 85, 247, 0.6), 0 0 25px rgba(168, 85, 247, 0.4);
   }
-  
-  .btn-secondary {
-    @apply bg-[#161b22] border border-[#30363d] hover:bg-[#24292e] text-gray-200 font-semibold py-3 px-6 rounded-lg transition-all duration-300;
-  }
-  
-  .input-field {
-    @apply w-full px-4 py-3 bg-[#24292e] border border-[#30363d] text-white rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200;
-  }
-  
-  .card {
-    @apply bg-[#161b22] border border-[#30363d] rounded-xl shadow-lg p-6;
-  }
-  
-  .feature-card {
-    @apply bg-[#161b22] border border-[#30363d] hover:bg-[#24292e] hover:border-teal-500/30 transition-all duration-300;
-  }
-  
-  .network-card {
-    @apply card hover:shadow-xl transition-all duration-300 cursor-pointer border-2 hover:border-teal-500;
-  }
-  
-  .network-card.selected {
-    @apply border-teal-500 bg-teal-500/10;
-  }
-  
-  /* Arc-specific styling */
-  .arc-gradient-text {
-    @apply bg-gradient-to-r from-teal-300 to-green-300 bg-clip-text text-transparent;
-  }
-  
-  .arc-button-primary {
-    @apply bg-gradient-to-r from-teal-600 to-green-600 hover:from-teal-500 hover:to-green-500 text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg;
-  }
-  
-  .arc-card {
-    @apply bg-[#161b22] border border-[#30363d] rounded-xl p-6 hover:bg-[#24292e] hover:border-teal-500/30 transition-all duration-300;
-  }
+}
+
+.animate-fade-motto {
+  animation: fadeInOut 4s ease-in-out infinite;
+}
+
+.animate-motto-glow {
+  animation: mottoGlow 3s ease-in-out infinite;
 }

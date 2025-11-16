@@ -1,0 +1,64 @@
+{
+  "total_users": 5,
+  "feedback_entries": [
+    {
+      "timestamp": "2025-11-15T15:59:41.633721",
+      "rating": 5,
+      "comment": "Amazing dual-perspective demo! Really shows the complete rental ecosystem.",
+      "features_liked": [
+        "dual_perspective",
+        "real_time_notifications"
+      ]
+    },
+    {
+      "timestamp": "2025-11-15T15:59:41.634261",
+      "rating": 4,
+      "comment": "Circle Programmable Wallets integration is seamless. Great UX!",
+      "features_liked": [
+        "circle_wallets",
+        "escrow_management"
+      ]
+    },
+    {
+      "timestamp": "2025-11-15T15:59:41.634822",
+      "rating": 5,
+      "comment": "Real-time notifications between tenant and landlord are brilliant!",
+      "features_liked": [
+        "real_time_notifications",
+        "dual_perspective"
+      ]
+    },
+    {
+      "timestamp": "2025-11-15T15:59:41.635471",
+      "rating": 4,
+      "comment": "Cross-chain bridge works perfectly. Very smooth transaction flow.",
+      "features_liked": [
+        "cross_chain_bridge",
+        "circle_wallets"
+      ]
+    },
+    {
+      "timestamp": "2025-11-15T15:59:41.636072",
+      "rating": 5,
+      "comment": "This solves real rental market problems. Practical and innovative!",
+      "features_liked": [
+        "escrow_management",
+        "dual_perspective"
+      ]
+    }
+  ],
+  "ratings": [
+    5,
+    4,
+    5,
+    4,
+    5
+  ],
+  "feature_votes": {
+    "circle_wallets": 2,
+    "dual_perspective": 3,
+    "real_time_notifications": 2,
+    "escrow_management": 2,
+    "cross_chain_bridge": 1
+  }
+}

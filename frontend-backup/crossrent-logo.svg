@@ -1,0 +1,30 @@
+<svg width="64" height="64" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="256" cy="256" r="240" fill="#2563EB"/>
+  
+  <!-- House Shape -->
+  <path d="M180 200L256 140L332 200V340H180V200Z" fill="#1E3A8A"/>
+  <path d="M160 220L256 140L352 220V360H160V220Z" fill="#3B82F6"/>
+  
+  <!-- Dollar Sign Circle -->
+  <circle cx="256" cy="260" r="50" fill="#60A5FA"/>
+  <circle cx="256" cy="260" r="40" fill="white"/>
+  
+  <!-- Dollar Sign -->
+  <path d="M246 240V280M246 235H266C270 235 274 239 274 243C274 247 270 251 266 251H246M246 269H266C270 269 274 273 274 277C274 281 270 285 266 285H246M246 280V285" 
+        stroke="#2563EB" stroke-width="4" stroke-linecap="round" fill="none"/>
+  
+  <!-- Circular Arrows -->
+  <path d="M180 180C200 160 220 150 256 150" stroke="#60A5FA" stroke-width="8" fill="none" marker-end="url(#arrowhead1)"/>
+  <path d="M332 320C312 340 292 350 256 350" stroke="#60A5FA" stroke-width="8" fill="none" marker-end="url(#arrowhead2)"/>
+  
+  <!-- Arrow Markers -->
+  <defs>
+    <marker id="arrowhead1" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#60A5FA"/>
+    </marker>
+    <marker id="arrowhead2" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#60A5FA"/>
+    </marker>
+  </defs>
+</svg>

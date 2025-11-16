@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { ArrowRight, Wallet, GitBranch, CheckCircle, Clock, AlertCircle, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, Clock, CheckCircle, Sparkles, Wallet, GitBranch, AlertCircle, Shield, DollarSign, TrendingUp } from 'lucide-react';
 import Navigation from '../../components/Navigation';
 
 const SOURCE_CHAINS = [
@@ -47,11 +47,50 @@ export default function BridgePage() {
           </div>
           
           <h1 className="text-5xl font-bold text-white mb-4">
-            Bridge USDC to <span className="arc-gradient-text">Arc</span>
+            Bridge USDC to <span className="bg-gradient-to-r from-teal-400 to-green-400 bg-clip-text text-transparent">Arc</span>
           </h1>
-          <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-            Transfer USDC from any chain to Arc using Circle's Cross-Chain Transfer Protocol
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-2">
+            Transfer USDC seamlessly using Circle's Cross-Chain Transfer Protocol
           </p>
+          <div className="text-lg text-blue-300 font-semibold">
+            🏆 Pure USDC Focus • No Token Volatility • Stable Value
+          </div>
+          
+          {/* Key Benefits */}
+          <div className="max-w-4xl mx-auto grid md:grid-cols-3 gap-6 mb-12">
+            <div className="bg-[#161b22] border border-green-500/30 rounded-xl p-6 text-center">
+              <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-green-400 mb-2">For Tenants</h3>
+              <p className="text-sm text-gray-300 mb-3">Build credit • Earn 4.2% yield • Flexible 6-month terms</p>
+              <div className="text-xs text-green-200 bg-green-600/20 rounded-lg p-2">
+                <strong>🏠 Future Property Purchase:</strong> High reputation = up to 2% lower mortgage rates!
+              </div>
+            </div>
+            
+            <div className="bg-[#161b22] border border-blue-500/30 rounded-xl p-6 text-center">
+              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <DollarSign className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-blue-400 mb-2">For Landlords</h3>
+              <p className="text-sm text-gray-300 mb-3">100% payment guarantee • Risk insurance • Instant releases</p>
+              <div className="text-xs text-blue-200 bg-blue-600/20 rounded-lg p-2">
+                <strong>💰 Guaranteed Income:</strong> Smart contracts ensure zero payment delays
+              </div>
+            </div>
+            
+            <div className="bg-[#161b22] border border-yellow-500/30 rounded-xl p-6 text-center">
+              <div className="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <TrendingUp className="w-6 h-6 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-yellow-400 mb-2">USDC Yields</h3>
+              <p className="text-sm text-gray-300 mb-3">Earn 4.2% APY on all deposits • No inflation risk</p>
+              <div className="text-xs text-yellow-200 bg-yellow-600/20 rounded-lg p-2">
+                <strong>📈 Compound Growth:</strong> $5000 → $5210 per year automatically
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Main Bridge Interface */}

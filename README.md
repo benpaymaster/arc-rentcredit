@@ -54,7 +54,7 @@ backend/
 ### Installation
 ```bash
 # Clone repository
-git clone https://github.com/benpaymaster/arc-rentcredit.git
+git clone https://github.com/benpaymaster/CrossRent.git
 cd arc-rentcredit
 
 # Install backend dependencies
@@ -188,7 +188,7 @@ Built for **Arc Hackathon 2025**:
 
 ## 🔗 Links
 
-- **Repository**: https://github.com/benpaymaster/arc-rentcredit
+- **Repository**: https://github.com/benpaymaster/CrossRent
 - **Live Demo**: http://localhost:8081 (local setup required)
 - **Presentation**: [presentation.pdf](presentation.pdf)
 - **Arc Blockchain**: https://arc.net

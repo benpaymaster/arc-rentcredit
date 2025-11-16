@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen 1: Bridge USDC → Arc</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0d1117;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .card {
+            background-color: #161b22;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid #30363d;
+        }
+        .status-box {
+            min-height: 100px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #2e8b57, #3cb371);
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 139, 87, 0.3);
+        }
+        .benefit-card {
+            background: rgba(46, 139, 87, 0.1);
+            border: 1px solid rgba(46, 139, 87, 0.2);
+            transition: all 0.3s ease;
+        }
+        .benefit-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(46, 139, 87, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="card rounded-xl p-8 text-white">
+        <!-- Navigation -->
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-4xl font-bold text-teal-300">Bridge USDC → Arc</h1>
+            <div class="flex gap-4">
+                <a href="screen2-escrow.html" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">Escrow</a>
+                <a href="screen3-dashboard.html" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors">Dashboard</a>
+            </div>
+        </div>
+
+        <p class="text-lg text-center text-gray-300 mb-8">🏆 Pure USDC Focus • No Token Volatility • Stable Value</p>
+
+        <!-- Key Benefits Row -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="benefit-card rounded-xl p-6 text-center">
+                <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    🏠
+                </div>
+                <h3 class="text-lg font-bold text-green-400 mb-2">For Tenants</h3>
+                <p class="text-sm text-gray-300 mb-3">Build credit • Earn 4.2% yield • Flexible 6-month terms</p>
+                <div class="text-xs text-green-200 bg-green-600/20 rounded-lg p-2">
+                    <strong>🏠 Future Property Purchase:</strong> High reputation = up to 2% lower mortgage rates!
+                </div>
+            </div>
+            
+            <div class="benefit-card rounded-xl p-6 text-center">
+                <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    💰
+                </div>
+                <h3 class="text-lg font-bold text-blue-400 mb-2">For Landlords</h3>
+                <p class="text-sm text-gray-300 mb-3">100% payment guarantee • Risk insurance • Instant releases</p>
+                <div class="text-xs text-blue-200 bg-blue-600/20 rounded-lg p-2">
+                    <strong>💰 Guaranteed Income:</strong> Smart contracts ensure zero payment delays
+                </div>
+            </div>
+            
+            <div class="benefit-card rounded-xl p-6 text-center">
+                <div class="w-12 h-12 bg-yellow-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    📈
+                </div>
+                <h3 class="text-lg font-bold text-yellow-400 mb-2">USDC Yields</h3>
+                <p class="text-sm text-gray-300 mb-3">Earn 4.2% APY on all deposits • No inflation risk</p>
+                <div class="text-xs text-yellow-200 bg-yellow-600/20 rounded-lg p-2">
+                    <strong>📈 Compound Growth:</strong> $5000 → $5210 per year automatically
+                </div>
+            </div>
+        </div>
+
+        <!-- Bridge Interface -->
+        <div class="space-y-6">
+            <!-- Source Chain -->
+            <div>
+                <label for="fromChain" class="block text-sm font-medium mb-3 text-gray-300">From Network</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="p-4 rounded-xl border-2 border-teal-500 bg-teal-500/10 cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">Ξ</span>
+                            <div class="text-left">
+                                <div class="font-semibold text-blue-400">Ethereum</div>
+                                <div class="text-xs text-gray-400">Available: 10,000 USDC</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 rounded-xl border-2 border-gray-600 bg-gray-700/50 cursor-pointer opacity-60">
+                        <div class="flex items-center gap-3">
+                            <span class="text-2xl">⬢</span>
+                            <div class="text-left">
+                                <div class="font-semibold text-purple-400">Polygon</div>
+                                <div class="text-xs text-gray-400">Available: 5,000 USDC</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Amount Input -->
+            <div>
+                <label for="usdcAmount" class="block text-sm font-medium mb-3 text-gray-300">Amount to Bridge</label>
+                <div class="relative">
+                    <input type="number" id="usdcAmount" value="5000.00" step="0.01" min="1"
+                           class="w-full p-6 bg-[#24292e] border border-[#30363d] rounded-xl text-white text-2xl font-bold focus:border-teal-500 focus:outline-none" placeholder="0.00">
+                    <div class="absolute right-6 top-1/2 transform -translate-y-1/2 flex items-center gap-3">
+                        <span class="text-gray-400 font-medium">USDC</span>
+                        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center">
+                            <span class="text-white text-xs font-bold">$</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Amount Buttons -->
+                <div class="flex gap-2 mt-4">
+                    <button onclick="setAmount('1000')" class="px-4 py-2 bg-[#24292e] border border-[#30363d] rounded-lg text-gray-300 hover:border-teal-500/50 transition-all text-sm">$1000</button>
+                    <button onclick="setAmount('2500')" class="px-4 py-2 bg-[#24292e] border border-[#30363d] rounded-lg text-gray-300 hover:border-teal-500/50 transition-all text-sm">$2500</button>
+                    <button onclick="setAmount('5000')" class="px-4 py-2 bg-teal-600 border border-teal-500 rounded-lg text-white transition-all text-sm">$5000</button>
+                    <button onclick="setAmount('10000')" class="px-4 py-2 bg-[#24292e] border border-[#30363d] rounded-lg text-gray-300 hover:border-teal-500/50 transition-all text-sm">$10000</button>
+                </div>
+            </div>
+
+            <!-- Destination -->
+            <div>
+                <label class="block text-sm font-medium mb-3 text-gray-300">To Network</label>
+                <div class="p-6 bg-gradient-to-r from-teal-600/20 to-green-600/20 border border-teal-500/30 rounded-xl">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-gradient-to-br from-teal-500 to-green-600 rounded-xl flex items-center justify-center">
+                            <span class="text-white text-2xl">⚡</span>
+                        </div>
+                        <div>
+                            <div class="text-lg font-semibold text-white">Arc Blockchain</div>
+                            <div class="text-teal-300 text-sm">Destination: Arc Dev Wallet</div>
+                        </div>
+                        <div class="ml-auto text-right">
+                            <div class="text-2xl font-bold text-teal-300" id="receiveAmount">$5,000</div>
+                            <div class="text-xs text-gray-400">USDC to receive</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bridge Button -->
+        <button onclick="initiateBridge()" id="bridgeButton"
+            class="mt-8 w-full py-6 rounded-xl font-bold text-lg btn-primary text-white shadow-lg flex items-center justify-center">
+            <span id="buttonText">Bridge Now</span>
+            <span class="ml-3">→</span>
+        </button>
+
+        <!-- Status Box -->
+        <div id="statusBox" class="status-box mt-6 p-6 rounded-xl bg-gray-600/20 border border-gray-600/30">
+            <div class="flex items-start gap-3">
+                <div class="w-5 h-5 text-blue-400 mt-0.5">ⓘ</div>
+                <div class="text-sm text-gray-300">
+                    <strong class="text-blue-300">Circle CCTP Bridge:</strong> Native USDC transfer with ~10-15 minute settlement time. 
+                    No slippage, no liquidity pools - just native USDC across chains.
+                </div>
+            </div>
+            <ul id="statusList" class="space-y-2 mt-4">
+                <li class="flex items-center">
+                    <span class="inline-block w-2 h-2 rounded-full mr-2 bg-green-500"></span>
+                    Ready to bridge USDC
+                </li>
+            </ul>
+        </div>
+
+        <!-- Next Step -->
+        <div class="mt-8 text-center">
+            <a href="screen2-escrow.html" class="inline-flex items-center gap-3 px-8 py-4 bg-[#161b22] border border-teal-500 text-teal-300 rounded-xl font-semibold hover:bg-teal-500/10 transition-all">
+                🏠 Create Rental Escrow →
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function setAmount(amount) {
+            document.getElementById('usdcAmount').value = amount;
+            document.getElementById('receiveAmount').textContent = '$' + parseInt(amount).toLocaleString();
+        }
+
+        function updateStatus(message, type = 'active') {
+            const list = document.getElementById('statusList');
+            const li = document.createElement('li');
+            li.className = 'flex items-center';
+            
+            let iconClass = 'bg-yellow-500 animate-pulse';
+            if (type === 'success') iconClass = 'bg-green-500';
+            if (type === 'error') iconClass = 'bg-red-500';
+            
+            li.innerHTML = `<span class="inline-block w-2 h-2 rounded-full mr-2 ${iconClass}"></span>${message}`;
+            list.appendChild(li);
+        }
+
+        async function initiateBridge() {
+            const button = document.getElementById('bridgeButton');
+            const buttonText = document.getElementById('buttonText');
+            const amount = document.getElementById('usdcAmount').value;
+            
+            button.disabled = true;
+            buttonText.textContent = 'Bridging via CCTP...';
+            button.style.background = '#d97706';
+            
+            // Clear status
+            document.getElementById('statusList').innerHTML = '';
+            
+            updateStatus('Initiating CCTP bridge...', 'active');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            updateStatus('Burning USDC on Ethereum...', 'active');
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            updateStatus('Circle attestation in progress...', 'active');
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            
+            updateStatus('Minting USDC on Arc...', 'active');
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            updateStatus(`✅ Success! ${amount} USDC bridged to Arc`, 'success');
+            updateStatus('Arc Wallet Balance: ' + amount + ' USDC', 'success');
+            
+            buttonText.textContent = 'Bridge Complete ✅';
+            button.style.background = 'linear-gradient(135deg, #16a34a, #22c55e)';
+        }
+    </script>
+</body>
+</html>

@@ -1,13 +1,10 @@
+import type { Metadata } from 'next'
 import './globals.css'
-import { Inter } from 'next/font/google'
-import { Providers } from './providers'
 import { Toaster } from 'react-hot-toast'
 
-const inter = Inter({ subsets: ['latin'] })
-
-export const metadata = {
-  title: 'Arc Bridge - Cross-Chain USDC Transfers',
-  description: 'Transfer USDC seamlessly across blockchain networks using Circle Bridge Kit and Arc',
+export const metadata: Metadata = {
+  title: 'CrossRent - Global Rent Platform',
+  description: 'Global rent payment with universal credit and reputation',
 }
 
 export default function RootLayout({
@@ -17,22 +14,26 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Providers>
-          <div className="min-h-screen gradient-bg">
-            {children}
-            <Toaster 
-              position="top-right"
-              toastOptions={{
-                duration: 5000,
-                style: {
-                  background: '#363636',
-                  color: '#fff',
-                },
-              }}
-            />
-          </div>
-        </Providers>
+      <body>
+        {children}
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: 'rgba(255, 255, 255, 0.1)',
+              color: '#fff',
+              backdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+            },
+            success: {
+              iconTheme: {
+                primary: '#10B981',
+                secondary: '#fff',
+              },
+            },
+          }}
+        />
       </body>
     </html>
   )

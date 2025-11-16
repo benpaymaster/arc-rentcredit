@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrossRent API Test</title>
+</head>
+<body>
+    <h1>CrossRent API Test</h1>
+    <div id="status"></div>
+    <button onclick="testAPI()">Test Backend API</button>
+    <button onclick="testWalletCreation()">Test Wallet Creation</button>
+    <div id="results"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        const status = document.getElementById('status');
+        const results = document.getElementById('results');
+
+        async function testAPI() {
+            status.innerHTML = 'Testing API connection...';
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                status.innerHTML = `✅ API Connected: ${data.status}`;
+                results.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                status.innerHTML = `❌ API Error: ${error.message}`;
+                results.innerHTML = `Error: ${error.toString()}`;
+            }
+        }
+
+        async function testWalletCreation() {
+            status.innerHTML = 'Testing wallet creation...';
+            try {
+                const response = await fetch(`${API_BASE}/wallet/create`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userType: 'tenant',
+                        blockchains: ['ARC-SEPOLIA'],
+                        accountType: 'SCA',
+                        custodyType: 'DEVELOPER'
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    status.innerHTML = `✅ Wallet Created: ${data.address}`;
+                    results.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                } else {
+                    status.innerHTML = `❌ Wallet Creation Failed: ${data.error}`;
+                }
+            } catch (error) {
+                status.innerHTML = `❌ Wallet Error: ${error.message}`;
+                results.innerHTML = `Error: ${error.toString()}`;
+            }
+        }
+
+        // Auto-test on load
+        window.onload = testAPI;
+    </script>
+</body>
+</html>
