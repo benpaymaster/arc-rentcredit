@@ -71,7 +71,7 @@ export default function CCTPDemo() {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+        <div className="max-w-4xl mx-auto p-6">
             <div className="bg-white rounded-xl shadow-2xl overflow-hidden">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6">

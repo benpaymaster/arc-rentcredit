@@ -7,6 +7,7 @@ import PaymentHistory from './PaymentHistory'
 import FeedbackModal from './FeedbackModal'
 import PropertiesModal from './PropertiesModal'
 import PaymentEvidence from './PaymentEvidence'
+import CCTPDemo from './CCTPDemo'
 import { getProperties, type Property } from '../lib/properties'
 import { getAllPayments, getPaymentStats, type PaymentRecord } from '../lib/paymentTracking'
 
@@ -23,6 +24,7 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
   const [showFeedback, setShowFeedback] = useState(false)
   const [showProperties, setShowProperties] = useState(false)
   const [showEvidence, setShowEvidence] = useState(false)
+  const [showCCTPDemo, setShowCCTPDemo] = useState(false)
   const [properties, setProperties] = useState<Property[]>([])
   
   // Payment tracking state
@@ -208,7 +210,7 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
               </h2>
               <div className="flex items-center space-x-3">
                 <button
-                  onClick={() => window.open('/cctp-demo', '_blank')}
+                  onClick={() => setShowCCTPDemo(true)}
                   className="bg-gradient-to-r from-purple-500/20 to-purple-600/20 border border-purple-400/30 text-purple-200 px-4 py-2 rounded-xl font-medium hover:bg-purple-500/30 transition-all duration-300 flex items-center space-x-2"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -366,6 +368,23 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
           isOpen={showEvidence} 
           onClose={() => setShowEvidence(false)} 
         />
+      )}
+
+      {showCCTPDemo && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h2 className="text-xl font-bold">Circle CCTP Demonstration</h2>
+              <button
+                onClick={() => setShowCCTPDemo(false)}
+                className="text-gray-500 hover:text-gray-700 text-xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+            <CCTPDemo />
+          </div>
+        </div>
       )}
 
       <PropertiesModal 
