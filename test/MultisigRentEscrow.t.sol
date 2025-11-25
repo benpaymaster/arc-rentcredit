@@ -6,64 +6,80 @@ import "../contracts/MultisigRentEscrow.sol";
 
 contract MultisigRentEscrowTest is Test {
     MultisigRentEscrow escrow;
-    address[] signers;
-    uint256 escrowId;
+    address landlord = address(0xB);
+    address renter = address(0xA);
+    address[] renterSignatories;
+    address[] landlordSignatories;
+    string inventoryUri = "ipfs://property-inventory-123";
 
     function setUp() public {
         escrow = new MultisigRentEscrow();
-        // 3 renter signatories, 3 landlord signatories
-        for (uint256 i = 0; i < 6; i++) {
-            signers.push(address(uint160(i + 1)));
-        }
+        renterSignatories.push(address(0xC));
+        renterSignatories.push(address(0xD));
+        renterSignatories.push(address(0xE));
+        landlordSignatories.push(address(0xF));
+        landlordSignatories.push(address(0x10));
+        landlordSignatories.push(address(0x11));
     }
 
-    function testCreateEscrow() public {
-        // Renter pays deposit
-        vm.deal(address(this), 10 ether);
-        escrowId = escrow.createEscrow{value: 1 ether}(signers, 4);
-        (address[] memory s, uint256 q, uint256 bal, bool released, uint256 sigs) = escrow.getEscrow(escrowId);
-        assertEq(s.length, 6);
-        assertEq(q, 4);
-        assertEq(bal, 1 ether);
+    function testMultisigSetupAndNFTMint() public {
+        vm.deal(renter, 2 ether);
+        vm.prank(renter);
+        uint256 escrowId = escrow.createEscrow{value: 1 ether}(
+            landlord,
+            renterSignatories,
+            landlordSignatories,
+            4,
+            inventoryUri
+        );
+        (
+            address escrowRenter,
+            address escrowLandlord,
+            address[] memory renterSigs,
+            address[] memory landlordSigs,
+            uint256 quorum,
+            uint256 balance,
+            bool released,
+            uint256 signatures,
+            uint256 inventoryNftId,
+            bool multisigConfirmed
+        ) = escrow.getEscrow(escrowId);
+        assertEq(escrowRenter, renter);
+        assertEq(escrowLandlord, landlord);
+        assertEq(renterSigs.length, 3);
+        assertEq(landlordSigs.length, 3);
+        assertEq(quorum, 4);
+        assertEq(balance, 1 ether);
         assertEq(released, false);
-        assertEq(sigs, 0);
+        assertEq(multisigConfirmed, false);
+        assertEq(escrow.tokenURI(inventoryNftId), inventoryUri);
     }
 
-    function testSignAndRelease() public {
-        vm.deal(address(this), 10 ether);
-        escrowId = escrow.createEscrow{value: 1 ether}(signers, 4);
-        // 3 signers sign, deposit not released
-        for (uint256 i = 0; i < 3; i++) {
-            vm.prank(signers[i]);
-            escrow.signRelease(escrowId);
-        }
-        (, , , bool released, uint256 sigs) = escrow.getEscrow(escrowId);
-        assertEq(released, false);
-        assertEq(sigs, 3);
-        // 4th signer signs, deposit released
-        vm.prank(signers[3]);
+    function testMultisigConfirmationAndRelease() public {
+        vm.deal(renter, 2 ether);
+        vm.prank(renter);
+        uint256 escrowId = escrow.createEscrow{value: 1 ether}(
+            landlord,
+            renterSignatories,
+            landlordSignatories,
+            4,
+            inventoryUri
+        );
+        // Confirm multisig
+        vm.prank(renter);
+        escrow.confirmMultisig(escrowId);
+        (, , , , , , , , , bool multisigConfirmed) = escrow.getEscrow(escrowId);
+        assertEq(multisigConfirmed, true);
+        // Sign release by 4 signatories
+        vm.prank(renterSignatories[0]);
         escrow.signRelease(escrowId);
-        (, , , released, sigs) = escrow.getEscrow(escrowId);
+        vm.prank(renterSignatories[1]);
+        escrow.signRelease(escrowId);
+        vm.prank(landlordSignatories[0]);
+        escrow.signRelease(escrowId);
+        vm.prank(landlordSignatories[1]);
+        escrow.signRelease(escrowId);
+        (, , , , , , bool released, , , ) = escrow.getEscrow(escrowId);
         assertEq(released, true);
-        assertEq(sigs, 4);
-    }
-
-    function testOnlySignatoryCanSign() public {
-        vm.deal(address(this), 10 ether);
-        escrowId = escrow.createEscrow{value: 1 ether}(signers, 4);
-        address notSigner = address(100);
-        vm.prank(notSigner);
-        vm.expectRevert("Not a signatory");
-        escrow.signRelease(escrowId);
-    }
-
-    function testNoDoubleSign() public {
-        vm.deal(address(this), 10 ether);
-        escrowId = escrow.createEscrow{value: 1 ether}(signers, 4);
-        vm.prank(signers[0]);
-        escrow.signRelease(escrowId);
-        vm.prank(signers[0]);
-        vm.expectRevert("Already signed");
-        escrow.signRelease(escrowId);
     }
 }

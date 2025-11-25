@@ -248,3 +248,75 @@ cd frontend && python3 -m http.server 8081
 ---
 
 _Built for Arc Hackathon 2025 - Showcasing programmable money and cross-chain USDC_
+
+## Multisig Setup & Inventory NFT Feature
+
+### Overview
+
+The MultisigRentEscrow contract supports:
+
+- Separate setup of 3 renter and 3 landlord signatories (4-of-6 multisig)
+- ERC-721 NFT minting for property inventory (to both parties)
+- Confirmation and event-driven notifications for frontend integration
+
+### Contract Location
+
+- `contracts/MultisigRentEscrow.sol`
+
+### Test Coverage
+
+- Foundry tests in `test/MultisigRentEscrow.t.sol` validate:
+  - Multisig setup and signatory assignment
+  - NFT minting and metadata
+  - Multisig confirmation and deposit release
+
+### Usage Example
+
+```solidity
+// Setup multisig escrow and mint inventory NFT
+uint256 escrowId = multisigEscrow.createEscrow{value: 1 ether}(
+    landlord,
+    renterSignatories,
+    landlordSignatories,
+    4,
+    "ipfs://property-inventory-123"
+);
+// Confirm multisig
+multisigEscrow.confirmMultisig(escrowId);
+// Sign release by 4 signatories
+multisigEscrow.signRelease(escrowId);
+```
+
+## Gas Optimization Improvements
+
+### Overview
+
+All major contracts have been refactored for gas efficiency:
+
+- Custom errors instead of string-based require checks
+- Efficient loop and access patterns
+- Redundant checks removed
+
+### Optimized Contracts
+
+- `OptimisticDemocracy.sol`: Consensus/dispute logic
+- `MultisigRentEscrow.sol`: Multisig and NFT logic
+
+### Test Coverage
+
+- All Foundry tests pass after optimization
+
+### Example
+
+```solidity
+if (!isVoter) revert NotVoter();
+if (msg.value == 0) revert DepositRequired();
+```
+
+### Impact
+
+- Lower transaction costs
+- Faster execution
+- Professional Solidity best practices
+
+---

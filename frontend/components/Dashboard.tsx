@@ -1,6 +1,6 @@
-'use client'
-
+"use client"
 import { useState, useEffect } from 'react'
+import toast from 'react-hot-toast'
 import { User, Star, Eye } from 'lucide-react'
 import PaymentForm from './PaymentForm'
 import PaymentHistory from './PaymentHistory'
@@ -21,14 +21,75 @@ interface DashboardProps {
 }
 
 export default function Dashboard({ userType, setUserType, onRegisterPaymentCallback }: DashboardProps) {
-  
+  // Listen for global dispute and multisig events for dashboard notifications
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    let provider, escrowContract, disputeContract;
+    async function setupListeners() {
+      try {
+        const escrowAddress = process.env.NEXT_PUBLIC_MULTISIG_ESCROW_ADDRESS;
+        const escrowAbi = [
+          "event MultisigAction(uint256 indexed escrowId, string action, address[] signers)"
+        ];
+        const disputeAddress = process.env.NEXT_PUBLIC_DISPUTE_CONTRACT_ADDRESS;
+        const disputeAbi = [
+          "event DisputeOpened(uint256 indexed disputeId, address indexed initiator, string reason)",
+          "event DisputeResolved(uint256 indexed disputeId, bool outcome)",
+          "event VoteCast(uint256 indexed disputeId, address indexed voter, bool support)"
+        ];
+        const { ethers } = await import("ethers");
+        provider = new (ethers as any).providers.Web3Provider((window as any).ethereum);
+        escrowContract = new ethers.Contract(escrowAddress, escrowAbi, provider);
+        disputeContract = new ethers.Contract(disputeAddress, disputeAbi, provider);
+        escrowContract.on("MultisigAction", (escrowId, action, signers) => {
+          window.dispatchEvent(new CustomEvent('dashboardNotification', { detail: { type: 'multisig', escrowId, action, signers } }));
+        });
+        disputeContract.on("DisputeOpened", (disputeId, initiator, reason) => {
+          window.dispatchEvent(new CustomEvent('dashboardNotification', { detail: { type: 'disputeOpened', disputeId, initiator, reason } }));
+        });
+        disputeContract.on("DisputeResolved", (disputeId, outcome) => {
+          window.dispatchEvent(new CustomEvent('dashboardNotification', { detail: { type: 'disputeResolved', disputeId, outcome } }));
+        });
+        disputeContract.on("VoteCast", (disputeId, voter, support) => {
+          window.dispatchEvent(new CustomEvent('dashboardNotification', { detail: { type: 'voteCast', disputeId, voter, support } }));
+        });
+      } catch (err) { }
+    }
+    setupListeners();
+    return () => {
+      if (escrowContract) escrowContract.removeAllListeners();
+      if (disputeContract) disputeContract.removeAllListeners();
+    };
+  }, []);
+
+  // Listen for dashboardNotification events and show toast
+  useEffect(() => {
+    function handleDashboardNotification(e: any) {
+      const d = e.detail;
+      if (!d) return;
+      if (d.type === 'multisig') {
+        toast(`Multisig Action: ${d.action} on Escrow #${d.escrowId} by ${d.signers.length} signers`, { icon: '📝' });
+      } else if (d.type === 'disputeOpened') {
+        toast(`Dispute Opened: #${d.disputeId} by ${d.initiator} (${d.reason})`, { icon: '⚠️' });
+      } else if (d.type === 'disputeResolved') {
+        toast.success(`Dispute #${d.disputeId} resolved: ${d.outcome ? 'Accepted' : 'Rejected'}`);
+      } else if (d.type === 'voteCast') {
+        toast(`Vote Cast on Dispute #${d.disputeId}: ${d.support ? 'Yes' : 'No'} by ${d.voter}`, { icon: '🗳️' });
+      }
+    }
+    window.addEventListener('dashboardNotification', handleDashboardNotification);
+    return () => {
+      window.removeEventListener('dashboardNotification', handleDashboardNotification);
+    };
+  }, []);
+
   const [showFeedback, setShowFeedback] = useState(false)
   const [showProperties, setShowProperties] = useState(false)
   const [showEvidence, setShowEvidence] = useState(false)
   const [showCCTPDemo, setShowCCTPDemo] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [properties, setProperties] = useState<Property[]>([])
-  
+
   // Payment tracking state
   const [activeTenants, setActiveTenants] = useState(0)
   const [paymentStats, setPaymentStats] = useState({
@@ -37,7 +98,7 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
     uniqueTenants: 0,
     uniqueProperties: 0
   })
-  
+
   // Dynamic scores that update with payments
   const [reputationScore, setReputationScore] = useState(() => {
     // Check if we're in browser environment
@@ -65,10 +126,10 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
   const updatePaymentStats = () => {
     const allPayments = getAllPayments()
     const stats = getPaymentStats()
-    
+
     setPaymentStats(stats)
     setActiveTenants(stats.uniqueTenants)
-    
+
     console.log('📊 Payment stats updated:', {
       totalPayments: stats.totalPayments,
       uniqueTenants: stats.uniqueTenants,
@@ -79,54 +140,54 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
   // Handle successful payment to update scores
   const handlePaymentSuccess = (amount: number) => {
     console.log('🎯 Payment success callback triggered:', { amount, userType })
-    
+
     setTotalPaid(prev => {
       const newTotal = prev + amount
       console.log('💰 Total paid updated:', { prev, amount, newTotal })
       return newTotal
     })
-    
+
     setPaymentCount(prev => {
       const newCount = prev + 1
       console.log('📊 Payment count updated:', { prev, newCount })
       return newCount
     })
-    
+
     // Increase reputation score based on payment (enhanced for demo)
     const scoreIncrease = Math.min(50, Math.floor(amount / 100 * 5)) // Up to +50 points for demo
     console.log('🎯 DEMO: Reputation score calculation:', { amount, scoreIncrease })
-    
+
     setReputationScore(prev => {
       const newScore = Math.min(1000, prev[userType] + scoreIncrease)
       const newState = {
         ...prev,
         [userType]: newScore
       }
-      console.log('⭐ REPUTATION SCORE UPDATED - DEMO:', { 
-        userType, 
-        prevScore: prev[userType], 
-        scoreIncrease, 
+      console.log('⭐ REPUTATION SCORE UPDATED - DEMO:', {
+        userType,
+        prevScore: prev[userType],
+        scoreIncrease,
         newScore: newScore,
         change: `${prev[userType]} → ${newScore}`,
         fullState: newState
       })
-      
+
       // Visual confirmation for demo
       setTimeout(() => {
         console.log('📈 VISIBLE CHANGE:', `Score changed from ${prev[userType]} to ${newScore}`)
       }, 100)
-      
+
       // Persist to localStorage
       if (typeof window !== 'undefined') {
         localStorage.setItem('crossrent-reputation-scores', JSON.stringify(newState))
       }
-      
+
       return newState
     })
-    
+
     // Refresh properties list
     setProperties(getProperties())
-    
+
     // Update payment statistics for landlord dashboard
     updatePaymentStats()
   }
@@ -178,22 +239,20 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
             <div className="flex space-x-2">
               <button
                 onClick={() => setUserType('tenant')}
-                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 ${
-                  userType === 'tenant'
+                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 ${userType === 'tenant'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
                     : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 <User size={18} />
                 <span>Tenant</span>
               </button>
               <button
                 onClick={() => setUserType('landlord')}
-                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 ${
-                  userType === 'landlord'
+                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center space-x-2 ${userType === 'landlord'
                     ? 'bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-lg'
                     : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
-                }`}
+                  }`}
               >
                 <User size={18} />
                 <span>Landlord</span>
@@ -230,7 +289,7 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
                 </p>
               </div>
             )}
-            
+
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-white">
                 {userType === 'tenant' ? 'Pay Rent' : 'Rent Management'}
@@ -270,8 +329,8 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
                 </button>
               </div>
             </div>
-            <PaymentForm 
-              userType={userType} 
+            <PaymentForm
+              userType={userType}
               onPaymentSuccess={handlePaymentSuccess}
               onShowProperties={() => setShowProperties(true)}
             />
@@ -299,15 +358,15 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
             </div>
             <div className="flex items-center mt-2">
               <div className="flex-1 bg-gray-200 rounded-full h-2 mr-3">
-                <div 
+                <div
                   className="bg-gradient-to-r from-yellow-400 to-orange-500 h-2 rounded-full transition-all duration-500"
                   style={{ width: `${(reputationScore[userType] / 1000) * 100}%` }}
                 ></div>
               </div>
               <span className="text-sm text-gray-600">
-                {reputationScore[userType] >= 900 ? 'Outstanding' : 
-                 reputationScore[userType] >= 800 ? 'Excellent' : 
-                 reputationScore[userType] >= 700 ? 'Good' : 'Fair'}
+                {reputationScore[userType] >= 900 ? 'Outstanding' :
+                  reputationScore[userType] >= 800 ? 'Excellent' :
+                    reputationScore[userType] >= 700 ? 'Good' : 'Fair'}
               </span>
             </div>
             {paymentCount > 0 && (
@@ -335,7 +394,7 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
               </div>
             </div>
           )}
-          
+
           {/* Vault Protection */}
           <div className="bg-gradient-to-br from-slate-950/95 via-gray-900/95 to-slate-950/95 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-6">
             <div className="flex items-center justify-between mb-2">
@@ -350,8 +409,8 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
               10%
             </div>
             <p className="text-sm text-purple-200 mt-1">
-              {userType === 'tenant' 
-                ? 'Extra deposit to safety pool' 
+              {userType === 'tenant'
+                ? 'Extra deposit to safety pool'
                 : 'Vault covers tenant defaults'}
             </p>
             <div className="mt-3 text-xs text-purple-300">
@@ -363,7 +422,7 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
               )}
             </div>
           </div>
-          
+
           {/* In Escrow */}
           <div className="bg-gradient-to-br from-slate-950/95 via-gray-900/95 to-slate-950/95 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl p-6">
             <h3 className="text-lg font-semibold text-white mb-2">In Escrow</h3>
@@ -376,24 +435,24 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
       </div>
 
       {showFeedback && (
-        <FeedbackModal 
-          isOpen={showFeedback} 
-          onClose={() => setShowFeedback(false)} 
+        <FeedbackModal
+          isOpen={showFeedback}
+          onClose={() => setShowFeedback(false)}
         />
       )}
 
       {showProperties && (
-        <PropertiesModal 
-          isOpen={showProperties} 
+        <PropertiesModal
+          isOpen={showProperties}
           onClose={() => setShowProperties(false)}
           properties={properties}
         />
       )}
 
       {showEvidence && (
-        <PaymentEvidence 
-          isOpen={showEvidence} 
-          onClose={() => setShowEvidence(false)} 
+        <PaymentEvidence
+          isOpen={showEvidence}
+          onClose={() => setShowEvidence(false)}
         />
       )}
 
@@ -416,7 +475,7 @@ export default function Dashboard({ userType, setUserType, onRegisterPaymentCall
 
       <OnboardingModal isOpen={showOnboarding} onClose={() => setShowOnboarding(false)} />
 
-      <PropertiesModal 
+      <PropertiesModal
         isOpen={showProperties}
         onClose={() => setShowProperties(false)}
         properties={properties}

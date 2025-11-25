@@ -68,9 +68,10 @@ contract OptimisticDemocracy {
                 break;
             }
         }
-        require(isVoter, "Not authorized");
+        if (!isVoter) revert NotVoter();
         _;
     }
+    error NotVoter();
 
     constructor(address[] memory _voters, uint256 _challengePeriod) {
         voters = _voters;
@@ -93,16 +94,12 @@ contract OptimisticDemocracy {
 
     function vote(uint256 disputeId, bool support) external onlyVoter {
         Dispute storage d = disputes[disputeId];
-        require(
-            d.status == DisputeStatus.Raised ||
-                d.status == DisputeStatus.Voting,
-            "Invalid status"
-        );
-        require(
-            block.timestamp <= d.challengeDeadline,
-            "Challenge period ended"
-        );
-        require(!d.hasVoted[msg.sender], "Already voted");
+        if (
+            !(d.status == DisputeStatus.Raised ||
+                d.status == DisputeStatus.Voting)
+        ) revert InvalidStatus();
+        if (block.timestamp > d.challengeDeadline) revert ChallengeEnded();
+        if (d.hasVoted[msg.sender]) revert AlreadyVoted();
         d.hasVoted[msg.sender] = true;
         if (support) {
             d.votesFor++;
@@ -113,39 +110,46 @@ contract OptimisticDemocracy {
         emit VoteCast(disputeId, msg.sender, support);
     }
 
+    error InvalidStatus();
+    error ChallengeEnded();
+    error AlreadyVoted();
+
     function finalize(uint256 disputeId) external {
         Dispute storage d = disputes[disputeId];
-        require(
-            block.timestamp > d.challengeDeadline,
-            "Challenge period not ended"
-        );
-        require(
-            d.status == DisputeStatus.Raised ||
-                d.status == DisputeStatus.Voting,
-            "Already resolved"
-        );
+        if (block.timestamp <= d.challengeDeadline) revert ChallengeNotEnded();
+        if (
+            !(d.status == DisputeStatus.Raised ||
+                d.status == DisputeStatus.Voting)
+        ) revert AlreadyResolved();
         bool outcome = d.votesFor > d.votesAgainst;
         d.status = DisputeStatus.Resolved;
         d.finalOutcome = outcome;
         emit DisputeResolved(disputeId, outcome);
     }
 
+    error ChallengeNotEnded();
+    error AlreadyResolved();
+
     function appeal(uint256 disputeId) external payable {
         Dispute storage d = disputes[disputeId];
-        require(d.status == DisputeStatus.Resolved, "Not resolved yet");
-        require(!d.appealed, "Already appealed");
-        require(msg.value >= d.appealFee, "Insufficient appeal fee");
+        if (d.status != DisputeStatus.Resolved) revert NotResolved();
+        if (d.appealed) revert AlreadyAppealed();
+        if (msg.value < d.appealFee) revert InsufficientAppealFee();
         d.appealed = true;
         d.status = DisputeStatus.Appealed;
         d.daoVoteDeadline = block.timestamp + 7 days;
         emit DisputeAppealed(disputeId, msg.sender, msg.value);
     }
 
+    error NotResolved();
+    error AlreadyAppealed();
+    error InsufficientAppealFee();
+
     function daoVote(uint256 disputeId, bool support) external onlyVoter {
         Dispute storage d = disputes[disputeId];
-        require(d.status == DisputeStatus.Appealed, "Not in appeal");
-        require(block.timestamp <= d.daoVoteDeadline, "DAO vote ended");
-        require(!d.daoHasVoted[msg.sender], "Already voted");
+        if (d.status != DisputeStatus.Appealed) revert NotInAppeal();
+        if (block.timestamp > d.daoVoteDeadline) revert DAOVoteEnded();
+        if (d.daoHasVoted[msg.sender]) revert AlreadyVoted();
         d.daoHasVoted[msg.sender] = true;
         if (support) {
             d.daoVotesFor++;
@@ -155,16 +159,21 @@ contract OptimisticDemocracy {
         emit DAOVoteCast(disputeId, msg.sender, support);
     }
 
+    error NotInAppeal();
+    error DAOVoteEnded();
+
     function finalizeDAO(uint256 disputeId) external {
         Dispute storage d = disputes[disputeId];
-        require(d.status == DisputeStatus.Appealed, "Not in appeal");
-        require(block.timestamp > d.daoVoteDeadline, "DAO vote not ended");
+        if (d.status != DisputeStatus.Appealed) revert NotInAppeal();
+        if (block.timestamp <= d.daoVoteDeadline) revert DAOVoteNotEnded();
         bool outcome = d.daoVotesFor > d.daoVotesAgainst;
         d.status = DisputeStatus.Finalized;
         d.finalOutcome = outcome;
         emit DAODecision(disputeId, outcome);
         emit DisputeFinalized(disputeId, outcome);
     }
+
+    error DAOVoteNotEnded();
 
     function getVoters() external view returns (address[] memory) {
         return voters;

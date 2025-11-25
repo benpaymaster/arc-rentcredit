@@ -493,61 +493,82 @@ optimisticDemocracy.finalizeDAO(disputeId);
 
 ---
 
-## 🔗 Links
+## 🔐 Multisig Setup & Inventory NFT Feature
 
-- **Repository**: https://github.com/benpaymaster/CrossRent
-- **Live Demo**: https://crossrent-arc.netlify.app
-- **Demo Video**: https://www.loom.com/share/2788850d31d14b03bfc30631be419ae5
-- **Arc Network**: https://arc.net
-- **Circle**: https://circle.com
+### Overview
 
-## 💰 **Market Impact & Scalability**
+The MultisigRentEscrow contract now supports:
 
-### 🌍 **Total Addressable Market:**
+- Separate setup of 3 renter and 3 landlord signatories (4-of-6 multisig)
+- Minting ERC-721 NFTs to both parties, representing property inventory
+- Confirmation of multisig setup and event-driven notifications
 
-- **$3.7 trillion** global rental market
-- **1.2 billion** people rent globally 🌍
-- **45 million** renters in US alone
-- **68%** of international students struggle with rent payments
-- **$500 billion** in security deposits locked without earning interest
+### Key Features
 
-### 🚀 **Scaling with Arc:**
+- **Multisig Logic**: 4-of-6 signatures required for deposit release
+- **Inventory NFT**: Minted to both renter and landlord, metadata stored on-chain
+- **Event Emission**: Setup, confirmation, and NFT minting events for frontend integration
 
-- **Handle 1M+ transactions/day** with Arc's throughput
-- **Global deployment ready** - USDC works everywhere
-- **Instant settlement** eliminates traditional 3-5 day delays
-- **Programmable money** enables automatic late fees, utilities, repairs
+### Smart Contract Location
 
-### 📈 **Business Model Validated:**
+- `contracts/MultisigRentEscrow.sol`
 
-- **0.5% transaction fee** = sustainable revenue at scale
-- **Credit scoring premium** for verified rental history
-- **Property management SaaS** for landlord tools
-- **Insurance integration** for dispute resolution
+### Test Coverage
 
-**CrossRent + Arc = The future of rental payments!** 🏠💫
+- Foundry tests in `test/MultisigRentEscrow.t.sol` cover:
+  - Multisig setup and signatory assignment
+  - NFT minting and metadata
+  - Multisig confirmation and deposit release
 
-## 🏆 Key Innovations
+### Usage Example
 
-1. **Eliminated Web3 Friction**: No "Connect Wallet" anywhere in the interface
-2. **Automatic Account Creation**: Users get wallets without knowing it
-3. **Real Payment Flow**: Actual USDC transactions with smart contract escrow
-4. **Dual Perspective**: See both tenant and landlord views instantly
-5. **Credit Building**: Every payment improves on-chain reputation
-
-## 🤝 Contributing
-
-This project showcases real-world blockchain utility with superior UX. Feedback welcome!
-
-1. Try the live demo at https://crossrent-arc.netlify.app
-2. Submit feedback through the built-in system
-3. Open issues for suggestions or improvements
-
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) for details.
+```solidity
+// Setup multisig escrow and mint inventory NFT
+uint256 escrowId = multisigEscrow.createEscrow{value: 1 ether}(
+    landlord,
+    renterSignatories,
+    landlordSignatories,
+    4,
+    "ipfs://property-inventory-123"
+);
+// Confirm multisig
+multisigEscrow.confirmMultisig(escrowId);
+// Sign release by 4 signatories
+multisigEscrow.signRelease(escrowId);
+```
 
 ---
 
-**Built with ❤️ for Arc Hackathon 2025**  
-_Making rent payments as simple as sending a text message_
+## ⚡ Gas Optimization Improvements
+
+### Overview
+
+All critical contracts have been optimized for gas efficiency:
+
+- **Custom errors** replace string-based require checks for lower deployment and runtime costs.
+- **Efficient loops** and access patterns minimize unnecessary storage reads/writes.
+- **Redundant checks** removed for leaner execution.
+
+### Optimized Contracts
+
+- `contracts/OptimisticDemocracy.sol`
+- `contracts/MultisigRentEscrow.sol`
+
+### Test Coverage
+
+- All Foundry tests pass after optimization, confirming no logic was broken.
+
+### Example (Custom Error Usage)
+
+```solidity
+if (!isVoter) revert NotVoter();
+if (msg.value == 0) revert DepositRequired();
+```
+
+### Why It Matters
+
+- Lower transaction costs for users
+- More scalable and performant Dapp
+- Demonstrates advanced Solidity skills for job applications
+
+---

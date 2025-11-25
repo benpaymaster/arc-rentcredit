@@ -13,7 +13,7 @@ function resetWalletBalance(wallet: WalletType | null) {
     const stored = localStorage.getItem('crossrent_wallets')
     let wallets = []
     if (stored) {
-      try { wallets = JSON.parse(stored) } catch (e) {}
+      try { wallets = JSON.parse(stored) } catch (e) { }
     }
     const idx = wallets.findIndex((w: any) => w.id === wallet.id)
     if (idx !== -1) {
@@ -35,27 +35,49 @@ interface PaymentDialogProps {
 }
 
 export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: PaymentDialogProps) {
-  // Listen for escrow events (example: using ethers.js)
+  // Listen for escrow, dispute, and multisig events (using ethers.js)
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    let provider, contract;
+    let provider, escrowContract, disputeContract;
     async function setupListeners() {
       try {
-        // Replace with your contract address and ABI
+        // Multisig Escrow Contract
         const escrowAddress = process.env.NEXT_PUBLIC_MULTISIG_ESCROW_ADDRESS;
         const escrowAbi = [
           "event EscrowCreated(uint256 indexed escrowId, address[] signatories, uint256 quorum, uint256 amount)",
-          "event DepositReleased(uint256 indexed escrowId)"
+          "event DepositReleased(uint256 indexed escrowId)",
+          "event MultisigAction(uint256 indexed escrowId, string action, address[] signers)"
         ];
-        // Use ethers.js provider (Metamask or default)
+        // Dispute/Consensus Contract
+        const disputeAddress = process.env.NEXT_PUBLIC_DISPUTE_CONTRACT_ADDRESS;
+        const disputeAbi = [
+          "event DisputeOpened(uint256 indexed disputeId, address indexed initiator, string reason)",
+          "event DisputeResolved(uint256 indexed disputeId, bool outcome)",
+          "event VoteCast(uint256 indexed disputeId, address indexed voter, bool support)"
+        ];
         const { ethers } = await import("ethers");
-        provider = new ethers.providers.Web3Provider(window.ethereum);
-        contract = new ethers.Contract(escrowAddress, escrowAbi, provider);
-        contract.on("EscrowCreated", (escrowId, signatories, quorum, amount) => {
+        provider = new (ethers as any).providers.Web3Provider((window as any).ethereum);
+        escrowContract = new ethers.Contract(escrowAddress, escrowAbi, provider);
+        disputeContract = new ethers.Contract(disputeAddress, disputeAbi, provider);
+        // Escrow events
+        escrowContract.on("EscrowCreated", (escrowId, signatories, quorum, amount) => {
           toast.success(`Escrow Created! ID: ${escrowId}, Quorum: ${quorum}`);
         });
-        contract.on("DepositReleased", (escrowId) => {
+        escrowContract.on("DepositReleased", (escrowId) => {
           toast.success(`Deposit Released for Escrow ID: ${escrowId}`);
+        });
+        escrowContract.on("MultisigAction", (escrowId, action, signers) => {
+          toast(`Multisig Action: ${action} on Escrow #${escrowId} by ${signers.length} signers`, { icon: '📝' });
+        });
+        // Dispute/consensus events
+        disputeContract.on("DisputeOpened", (disputeId, initiator, reason) => {
+          toast(`Dispute Opened: #${disputeId} by ${initiator} (${reason})`, { icon: '⚠️' });
+        });
+        disputeContract.on("DisputeResolved", (disputeId, outcome) => {
+          toast.success(`Dispute #${disputeId} resolved: ${outcome ? 'Accepted' : 'Rejected'}`);
+        });
+        disputeContract.on("VoteCast", (disputeId, voter, support) => {
+          toast(`Vote Cast on Dispute #${disputeId}: ${support ? 'Yes' : 'No'} by ${voter}`, { icon: '🗳️' });
         });
       } catch (err) {
         // Ignore if not configured
@@ -63,9 +85,8 @@ export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: Pay
     }
     setupListeners();
     return () => {
-      if (contract) {
-        contract.removeAllListeners();
-      }
+      if (escrowContract) escrowContract.removeAllListeners();
+      if (disputeContract) disputeContract.removeAllListeners();
     };
   }, []);
   // Toggle for dev vs prod payment logic
@@ -126,7 +147,7 @@ export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: Pay
     if (!currentWallet) return
 
     setIsProcessing(true)
-    
+
     try {
       // 🏠 Step 1: Create escrow on smart contract
       const escrowResult = await createEscrow(
@@ -219,11 +240,11 @@ export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: Pay
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={handleClose}
       />
-      
+
       {/* Dialog */}
       <div className="relative bg-gradient-to-br from-slate-950/95 via-gray-900/95 to-slate-950/95 backdrop-blur-xl border border-white/20 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
@@ -246,9 +267,8 @@ export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: Pay
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center justify-center space-x-4">
             <div className="flex items-center space-x-2">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
-                step === 'wallet' ? 'bg-purple-500' : 'bg-green-500'
-              }`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${step === 'wallet' ? 'bg-purple-500' : 'bg-green-500'
+                }`}>
                 {step === 'wallet' ? '1' : <CheckCircle size={16} />}
               </div>
               <span className={step === 'wallet' ? 'text-white font-medium' : 'text-green-400 font-medium'}>
@@ -257,23 +277,20 @@ export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: Pay
             </div>
             <div className={`flex-1 h-px ${step !== 'wallet' ? 'bg-green-400' : 'bg-gray-600'}`}></div>
             <div className="flex items-center space-x-2">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
-                step === 'payment' ? 'bg-purple-500' : step === 'success' ? 'bg-green-500' : 'bg-gray-600'
-              }`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${step === 'payment' ? 'bg-purple-500' : step === 'success' ? 'bg-green-500' : 'bg-gray-600'
+                }`}>
                 {step === 'success' ? <CheckCircle size={16} /> : '2'}
               </div>
-              <span className={`${
-                step === 'payment' ? 'text-white font-medium' : 
-                step === 'success' ? 'text-green-400 font-medium' : 'text-gray-400'
-              }`}>
+              <span className={`${step === 'payment' ? 'text-white font-medium' :
+                  step === 'success' ? 'text-green-400 font-medium' : 'text-gray-400'
+                }`}>
                 Set Payment
               </span>
             </div>
             <div className={`flex-1 h-px ${step === 'success' ? 'bg-green-400' : 'bg-gray-600'}`}></div>
             <div className="flex items-center space-x-2">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
-                step === 'success' ? 'bg-green-500' : 'bg-gray-600'
-              }`}>
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${step === 'success' ? 'bg-green-500' : 'bg-gray-600'
+                }`}>
                 {step === 'success' ? <CheckCircle size={16} /> : '3'}
               </div>
               <span className={step === 'success' ? 'text-green-400 font-medium' : 'text-gray-400'}>
@@ -294,7 +311,7 @@ export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: Pay
               <p className="text-purple-100 mb-6 text-xl leading-relaxed">
                 We'll create a secure digital account for you to pay rent with USDC (digital dollars). It takes just seconds!
               </p>
-              
+
               <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 rounded-2xl p-4 mb-6">
                 <div className="flex items-center space-x-3">
                   <div className="text-2xl">💡</div>
@@ -323,7 +340,7 @@ export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: Pay
                   </div>
                 </div>
               </div>
-              
+
               <button
                 onClick={handleCreateWallet}
                 disabled={isProcessing}
@@ -477,12 +494,12 @@ export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: Pay
                   ✅ DEPOSIT RECEIVED
                 </div>
               </div>
-              
+
               <h3 className="text-3xl font-bold text-white mb-3">Payment Successful! 🎉</h3>
               <p className="text-white/70 mb-4 text-lg">
                 Your rent payment of {amount} {token} has been processed successfully
               </p>
-              
+
               {/* Enhanced Success Message */}
               <div className="bg-gradient-to-r from-green-500/20 to-emerald-600/20 border border-green-400/30 rounded-xl p-6 mb-6">
                 <div className="flex items-center justify-center mb-4">
@@ -492,7 +509,7 @@ export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: Pay
                     <p className="text-green-200/80 text-sm">Landlord has been notified</p>
                   </div>
                 </div>
-                
+
                 <div className="text-sm text-green-200 space-y-3">
                   <div className="flex justify-between">
                     <span>Amount:</span>
@@ -512,7 +529,7 @@ export default function PaymentDialog({ isOpen, onClose, onPaymentSuccess }: Pay
                   </div>
                 </div>
               </div>
-              
+
               {/* Success Motto */}
               <div className="mb-6 animate-motto-glow">
                 <p className="text-green-300 font-bold text-lg">
