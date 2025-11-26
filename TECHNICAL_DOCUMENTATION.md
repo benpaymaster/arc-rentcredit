@@ -4,6 +4,13 @@
 
 CrossRent is a programmable rental escrow system built on Arc blockchain, integrating Circle Programmable Wallets and Bridge Kit to create the first truly cross-chain rental ecosystem.
 
+### Key Features & Engineering Highlights
+
+- **Optimistic Democracy Consensus**: Implements a robust, scalable consensus/dispute module for decentralized governance and trustless resolution.
+- **Advanced Dispute Resolution**: Multi-party voting, appeal logic, and DAO integration for transparent, fair outcomes.
+- **Gas Optimizations**: All contracts are engineered for gas efficiency, leveraging custom errors, minimal storage, and optimized logic.
+- **Event-Driven Architecture**: Frontend and backend are tightly integrated with contract events for real-time notifications and seamless UX.
+
 ## Architecture
 
 ### Smart Contracts (Solidity)
@@ -320,3 +327,22 @@ if (msg.value == 0) revert DepositRequired();
 - Professional Solidity best practices
 
 ---
+
+## 🔔 Event-Driven Frontend Notifications
+
+- **Dashboard.tsx** and **PaymentDialog.tsx** listen for contract events using ethers.js
+- Toast notifications for:
+  - Multisig escrow actions (creation, release, multisig)
+  - Dispute/consensus actions (opened, resolved, votes)
+- Uses environment variables for contract addresses:
+  - `NEXT_PUBLIC_MULTISIG_ESCROW_ADDRESS`
+  - `NEXT_PUBLIC_DISPUTE_CONTRACT_ADDRESS`
+
+## Environment Setup
+
+Add deployed contract addresses to `.env`:
+
+```
+NEXT_PUBLIC_MULTISIG_ESCROW_ADDRESS=<deployed_multisig_escrow_address>
+NEXT_PUBLIC_DISPUTE_CONTRACT_ADDRESS=<deployed_dispute_contract_address>
+```

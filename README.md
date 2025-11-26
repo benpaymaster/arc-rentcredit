@@ -1,3 +1,7 @@
+## Project Summary
+
+This project demonstrates advanced Solidity engineering for decentralized escrow, dispute resolution, and DAO governance, including an Optimistic Democracy consensus module. It features gas-optimized smart contracts, secure dispute resolution, and event-driven frontend architecture for real-time notifications.
+
 # 🏠 CrossRent - Seamless Rent Payment Platform
 
 [![Arc Blockchain](https://img.shields.io/badge/Built%20on-Arc%20Blockchain-blue)](https://arc.net)
@@ -572,3 +576,20 @@ if (msg.value == 0) revert DepositRequired();
 - Demonstrates advanced Solidity skills for job applications
 
 ---
+
+## 🔔 Event-Driven Frontend Notifications
+
+CrossRent now features real-time notifications for all major contract events:
+
+- **Multisig Escrow Events**: Escrow creation, deposit release, multisig actions
+- **Dispute/Consensus Events**: Dispute opened, resolved, votes cast
+- **Live Toasts**: All events trigger toast notifications in the Dashboard and PaymentDialog components
+
+### Environment Variables for Contract Addresses
+
+Set these in your `.env` file to connect the frontend to deployed contracts:
+
+```
+NEXT_PUBLIC_MULTISIG_ESCROW_ADDRESS=<deployed_multisig_escrow_address>
+NEXT_PUBLIC_DISPUTE_CONTRACT_ADDRESS=<deployed_dispute_contract_address>
+```

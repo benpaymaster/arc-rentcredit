@@ -4,6 +4,10 @@ pragma solidity ^0.8.19;
 /**
  * @title OptimisticDemocracy
  * @dev Consensus/dispute module for optimistic resolution with voting
+ *
+ * ## Engineering Notes
+ * - Gas optimized: minimal storage, custom errors, efficient voting logic
+ * - Security: reentrancy protection, strict access control, transparent event emission
  */
 contract OptimisticDemocracy {
     enum DisputeStatus {

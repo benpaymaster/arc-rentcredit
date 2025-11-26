@@ -8,6 +8,10 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
  * @dev Extends escrow logic with multisig release functionality for rent deposits.
  * - Configurable signatories for tenants and landlords
  * - Quorum-based release (e.g., 4 of 6 signatures required)
+ *
+ * ## Engineering Notes
+ * - Gas optimized: minimal storage, custom errors, efficient multisig logic
+ * - Security: strict signatory checks, transparent event emission
  */
 contract MultisigRentEscrow is ERC721 {
     error DepositRequired();

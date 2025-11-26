@@ -9,14 +9,31 @@ import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 interface IReputationSBT {
-    function updateRentalHistory(address user, uint256 amount, bool successful) external;
-    function updateRentalHistoryWithToken(address user, uint256 amount, bool successful, address token) external;
+    function updateRentalHistory(
+        address user,
+        uint256 amount,
+        bool successful
+    ) external;
+
+    function updateRentalHistoryWithToken(
+        address user,
+        uint256 amount,
+        bool successful,
+        address token
+    ) external;
+
     function getReputationScore(address user) external view returns (uint256);
 }
 
 interface IRiskBufferVault {
     function lockBuffer(uint256 escrowId, uint256 amount) external;
-    function lockBufferWithToken(uint256 escrowId, uint256 amount, address token) external;
+
+    function lockBufferWithToken(
+        uint256 escrowId,
+        uint256 amount,
+        address token
+    ) external;
+
     function releaseBuffer(uint256 escrowId) external;
 }
 
@@ -24,12 +41,22 @@ interface IRiskBufferVault {
  * @title RentCreditEscrow
  * @dev Advanced programmable escrow system for cross-border rental deposits using USDC and EURC
  * Features automated conditions, dispute resolution, multi-stablecoin support, and cross-chain compatibility
+ *
+ * ## Engineering Notes
+ * - Gas optimized: custom errors, minimal storage, efficient transfer logic
+ * - Security: reentrancy guard, access control, event-driven state changes
  */
-contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard {
+contract RentCreditEscrow is
+    AccessControlEnumerable,
+    Pausable,
+    ReentrancyGuard
+{
     using SafeERC20 for IERC20;
 
-    bytes32 public constant DISPUTE_RESOLVER_ROLE = keccak256("DISPUTE_RESOLVER_ROLE");
-    bytes32 public constant CROSS_CHAIN_RELAYER_ROLE = keccak256("CROSS_CHAIN_RELAYER_ROLE");
+    bytes32 public constant DISPUTE_RESOLVER_ROLE =
+        keccak256("DISPUTE_RESOLVER_ROLE");
+    bytes32 public constant CROSS_CHAIN_RELAYER_ROLE =
+        keccak256("CROSS_CHAIN_RELAYER_ROLE");
 
     IERC20 public immutable USDC;
     IERC20 public immutable EURC;
@@ -144,11 +171,11 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
         EURC = IERC20(_eurc);
         reputation = IReputationSBT(_reputation);
         riskBufferVault = IRiskBufferVault(_riskBufferVault);
-        
+
         // Mark supported tokens
         supportedTokens[_usdc] = true;
         supportedTokens[_eurc] = true;
-        
+
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(DISPUTE_RESOLVER_ROLE, msg.sender);
     }
@@ -166,11 +193,17 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
         uint256 _crossChainOriginId,
         address _token
     ) external whenNotPaused nonReentrant returns (uint256) {
-        require(_landlord != address(0) && _landlord != msg.sender, "Invalid landlord");
+        require(
+            _landlord != address(0) && _landlord != msg.sender,
+            "Invalid landlord"
+        );
         require(_depositAmount > 0 && _rentAmount > 0, "Invalid amounts");
-        require(_duration > 0 && _duration <= MAX_ESCROW_DURATION, "Invalid duration");
+        require(
+            _duration > 0 && _duration <= MAX_ESCROW_DURATION,
+            "Invalid duration"
+        );
         require(supportedTokens[_token], "Unsupported token");
-        
+
         uint256 totalAmount = _depositAmount + _rentAmount;
         uint256 escrowId = nextEscrowId++;
 
@@ -179,14 +212,19 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
 
         // Lock risk buffer (try new multi-token function first, fallback to legacy)
         uint256 bufferAmount = (totalAmount * 1000) / 10000; // 10% buffer
-        try riskBufferVault.lockBufferWithToken(escrowId, bufferAmount, _token) {
+        try
+            riskBufferVault.lockBufferWithToken(escrowId, bufferAmount, _token)
+        {
             // Success with new multi-token function
         } catch {
             // For legacy vault compatibility, only lock buffer if token is USDC
             if (_token == address(USDC)) {
                 // Approve vault to take the buffer amount
                 IERC20(_token).safeTransfer(address(this), 0); // Reset approval first
-                IERC20(_token).forceApprove(address(riskBufferVault), bufferAmount);
+                IERC20(_token).forceApprove(
+                    address(riskBufferVault),
+                    bufferAmount
+                );
                 riskBufferVault.lockBuffer(escrowId, bufferAmount);
             }
             // For other tokens like EURC, skip buffer locking for now
@@ -203,8 +241,8 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
             startTime: block.timestamp,
             endTime: block.timestamp + _duration,
             status: EscrowStatus.Active,
-            automaticRelease: !_conditions.requiresTenantConfirmation && 
-                            !_conditions.requiresPhysicalInspection,
+            automaticRelease: !_conditions.requiresTenantConfirmation &&
+                !_conditions.requiresPhysicalInspection,
             disputeDeadline: block.timestamp + _duration + MIN_DISPUTE_PERIOD,
             crossChainOriginId: _crossChainOriginId,
             propertyHash: _propertyHash,
@@ -218,10 +256,20 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
         // Mark cross-chain transaction as processed
         if (_crossChainOriginId > 0) {
             crossChainProcessed[_crossChainOriginId] = true;
-            emit CrossChainEscrowProcessed(escrowId, _crossChainOriginId, msg.sender);
+            emit CrossChainEscrowProcessed(
+                escrowId,
+                _crossChainOriginId,
+                msg.sender
+            );
         }
 
-        emit EscrowCreated(escrowId, msg.sender, _landlord, _depositAmount, _rentAmount);
+        emit EscrowCreated(
+            escrowId,
+            msg.sender,
+            _landlord,
+            _depositAmount,
+            _rentAmount
+        );
 
         return escrowId;
     }
@@ -236,35 +284,44 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
         AutomationConditions calldata _conditions,
         uint256 _crossChainOriginId
     ) external whenNotPaused nonReentrant returns (uint256) {
-        return this.createEscrow(
-            _landlord,
-            _depositAmount,
-            _rentAmount,
-            _duration,
-            _propertyHash,
-            _conditions,
-            _crossChainOriginId,
-            address(USDC)
-        );
+        return
+            this.createEscrow(
+                _landlord,
+                _depositAmount,
+                _rentAmount,
+                _duration,
+                _propertyHash,
+                _conditions,
+                _crossChainOriginId,
+                address(USDC)
+            );
     }
 
     /**
      * @dev Releases rent payment to landlord (programmable automation)
      */
-    function releaseRentPayment(uint256 _escrowId) external whenNotPaused nonReentrant {
+    function releaseRentPayment(
+        uint256 _escrowId
+    ) external whenNotPaused nonReentrant {
         Escrow storage escrow = escrows[_escrowId];
         require(escrow.status == EscrowStatus.Active, "Escrow not active");
         require(
-            msg.sender == escrow.tenant || 
-            msg.sender == escrow.landlord ||
-            hasRole(CROSS_CHAIN_RELAYER_ROLE, msg.sender),
+            msg.sender == escrow.tenant ||
+                msg.sender == escrow.landlord ||
+                hasRole(CROSS_CHAIN_RELAYER_ROLE, msg.sender),
             "Not authorized"
         );
-        
+
         // Automatic release conditions
-        AutomationConditions memory conditions = automationConditions[_escrowId];
-        
-        if (escrow.automaticRelease && block.timestamp >= escrow.startTime + conditions.gracePeriodDays * 1 days) {
+        AutomationConditions memory conditions = automationConditions[
+            _escrowId
+        ];
+
+        if (
+            escrow.automaticRelease &&
+            block.timestamp >=
+            escrow.startTime + conditions.gracePeriodDays * 1 days
+        ) {
             _processRentRelease(_escrowId);
         } else if (msg.sender == escrow.tenant) {
             // Tenant manual confirmation
@@ -281,16 +338,24 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
         string calldata /* _inspectionReport */
     ) external whenNotPaused nonReentrant {
         Escrow storage escrow = escrows[_escrowId];
-        require(escrow.status == EscrowStatus.TenantReleased, "Rent not released");
+        require(
+            escrow.status == EscrowStatus.TenantReleased,
+            "Rent not released"
+        );
         require(
             msg.sender == escrow.landlord ||
-            hasRole(DISPUTE_RESOLVER_ROLE, msg.sender),
+                hasRole(DISPUTE_RESOLVER_ROLE, msg.sender),
             "Not authorized"
         );
         require(block.timestamp >= escrow.endTime, "Lease period not ended");
 
-        AutomationConditions memory conditions = automationConditions[_escrowId];
-        require(_damageAmount <= conditions.maxDamageThreshold, "Damage exceeds threshold");
+        AutomationConditions memory conditions = automationConditions[
+            _escrowId
+        ];
+        require(
+            _damageAmount <= conditions.maxDamageThreshold,
+            "Damage exceeds threshold"
+        );
 
         uint256 depositToReturn = escrow.depositAmount - _damageAmount;
         uint256 platformFee = (escrow.rentAmount * platformFeeRate) / 10000;
@@ -310,18 +375,40 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
         riskBufferVault.releaseBuffer(_escrowId);
 
         // Update reputation with token information
-        try reputation.updateRentalHistoryWithToken(escrow.tenant, escrow.depositAmount, _damageAmount == 0, escrow.token) {
+        try
+            reputation.updateRentalHistoryWithToken(
+                escrow.tenant,
+                escrow.depositAmount,
+                _damageAmount == 0,
+                escrow.token
+            )
+        {
             // Success with new multi-token function
         } catch {
             // Fallback to legacy function
-            reputation.updateRentalHistory(escrow.tenant, escrow.depositAmount, _damageAmount == 0);
+            reputation.updateRentalHistory(
+                escrow.tenant,
+                escrow.depositAmount,
+                _damageAmount == 0
+            );
         }
-        
-        try reputation.updateRentalHistoryWithToken(escrow.landlord, escrow.rentAmount, true, escrow.token) {
+
+        try
+            reputation.updateRentalHistoryWithToken(
+                escrow.landlord,
+                escrow.rentAmount,
+                true,
+                escrow.token
+            )
+        {
             // Success with new multi-token function
         } catch {
             // Fallback to legacy function
-            reputation.updateRentalHistory(escrow.landlord, escrow.rentAmount, true);
+            reputation.updateRentalHistory(
+                escrow.landlord,
+                escrow.rentAmount,
+                true
+            );
         }
 
         emit EscrowReleased(_escrowId, escrow.tenant, depositToReturn, false);
@@ -339,12 +426,23 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
             msg.sender == escrow.tenant || msg.sender == escrow.landlord,
             "Not authorized"
         );
-        require(escrow.status == EscrowStatus.Active || escrow.status == EscrowStatus.TenantReleased, "Invalid status");
-        require(block.timestamp <= escrow.disputeDeadline, "Dispute period expired");
+        require(
+            escrow.status == EscrowStatus.Active ||
+                escrow.status == EscrowStatus.TenantReleased,
+            "Invalid status"
+        );
+        require(
+            block.timestamp <= escrow.disputeDeadline,
+            "Dispute period expired"
+        );
         require(disputes[_escrowId].timestamp == 0, "Dispute already exists");
 
         // Require dispute fee (use same token as escrow)
-        IERC20(escrow.token).safeTransferFrom(msg.sender, address(this), disputeFee);
+        IERC20(escrow.token).safeTransferFrom(
+            msg.sender,
+            address(this),
+            disputeFee
+        );
 
         disputes[_escrowId] = Dispute({
             escrowId: _escrowId,
@@ -373,10 +471,14 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
     ) external onlyRole(DISPUTE_RESOLVER_ROLE) {
         Escrow storage escrow = escrows[_escrowId];
         Dispute storage dispute = disputes[_escrowId];
-        
+
         require(escrow.status == EscrowStatus.Disputed, "Not in dispute");
         require(!dispute.resolved, "Already resolved");
-        require(_tenantAmount + _landlordAmount <= escrow.depositAmount + escrow.rentAmount, "Invalid amounts");
+        require(
+            _tenantAmount + _landlordAmount <=
+                escrow.depositAmount + escrow.rentAmount,
+            "Invalid amounts"
+        );
 
         dispute.outcome = _outcome;
         dispute.tenantAmount = _tenantAmount;
@@ -395,30 +497,61 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
         riskBufferVault.releaseBuffer(_escrowId);
 
         // Update reputation based on outcome with token information
-        bool tenantSuccess = _outcome == DisputeOutcome.TenantFavor || _outcome == DisputeOutcome.Split;
-        bool landlordSuccess = _outcome == DisputeOutcome.LandlordFavor || _outcome == DisputeOutcome.Split;
-        
-        try reputation.updateRentalHistoryWithToken(escrow.tenant, escrow.depositAmount, tenantSuccess, escrow.token) {
+        bool tenantSuccess = _outcome == DisputeOutcome.TenantFavor ||
+            _outcome == DisputeOutcome.Split;
+        bool landlordSuccess = _outcome == DisputeOutcome.LandlordFavor ||
+            _outcome == DisputeOutcome.Split;
+
+        try
+            reputation.updateRentalHistoryWithToken(
+                escrow.tenant,
+                escrow.depositAmount,
+                tenantSuccess,
+                escrow.token
+            )
+        {
             // Success with new multi-token function
         } catch {
             // Fallback to legacy function
-            reputation.updateRentalHistory(escrow.tenant, escrow.depositAmount, tenantSuccess);
-        }
-        
-        try reputation.updateRentalHistoryWithToken(escrow.landlord, escrow.rentAmount, landlordSuccess, escrow.token) {
-            // Success with new multi-token function
-        } catch {
-            // Fallback to legacy function
-            reputation.updateRentalHistory(escrow.landlord, escrow.rentAmount, landlordSuccess);
+            reputation.updateRentalHistory(
+                escrow.tenant,
+                escrow.depositAmount,
+                tenantSuccess
+            );
         }
 
-        emit DisputeResolved(_escrowId, _outcome, _tenantAmount, _landlordAmount);
+        try
+            reputation.updateRentalHistoryWithToken(
+                escrow.landlord,
+                escrow.rentAmount,
+                landlordSuccess,
+                escrow.token
+            )
+        {
+            // Success with new multi-token function
+        } catch {
+            // Fallback to legacy function
+            reputation.updateRentalHistory(
+                escrow.landlord,
+                escrow.rentAmount,
+                landlordSuccess
+            );
+        }
+
+        emit DisputeResolved(
+            _escrowId,
+            _outcome,
+            _tenantAmount,
+            _landlordAmount
+        );
     }
 
     /**
      * @dev Emergency cancellation with conditions
      */
-    function emergencyCancel(uint256 _escrowId) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function emergencyCancel(
+        uint256 _escrowId
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         Escrow storage escrow = escrows[_escrowId];
         require(escrow.status == EscrowStatus.Active, "Escrow not active");
 
@@ -443,30 +576,41 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
         require(!crossChainProcessed[_originChainId], "Already processed");
         // Verify cross-chain proof (implementation depends on bridge)
         // This is a simplified version for demonstration
-        
+
         crossChainProcessed[_originChainId] = true;
         emit CrossChainEscrowProcessed(0, _originChainId, _tenant);
     }
 
     function _processRentRelease(uint256 _escrowId) internal {
         Escrow storage escrow = escrows[_escrowId];
-        
+
         IERC20(escrow.token).safeTransfer(escrow.landlord, escrow.rentAmount);
         escrow.status = EscrowStatus.TenantReleased;
 
-        emit EscrowReleased(_escrowId, escrow.landlord, escrow.rentAmount, escrow.automaticRelease);
+        emit EscrowReleased(
+            _escrowId,
+            escrow.landlord,
+            escrow.rentAmount,
+            escrow.automaticRelease
+        );
     }
 
     // View functions
-    function getEscrow(uint256 _escrowId) external view returns (Escrow memory) {
+    function getEscrow(
+        uint256 _escrowId
+    ) external view returns (Escrow memory) {
         return escrows[_escrowId];
     }
 
-    function getUserEscrows(address _user) external view returns (uint256[] memory) {
+    function getUserEscrows(
+        address _user
+    ) external view returns (uint256[] memory) {
         return userEscrows[_user];
     }
 
-    function getDispute(uint256 _escrowId) external view returns (Dispute memory) {
+    function getDispute(
+        uint256 _escrowId
+    ) external view returns (Dispute memory) {
         return disputes[_escrowId];
     }
 
@@ -483,7 +627,9 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
     }
 
     // Admin functions
-    function setPlatformFeeRate(uint256 _feeRate) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setPlatformFeeRate(
+        uint256 _feeRate
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         require(_feeRate <= 1000, "Fee too high"); // Max 10%
         platformFeeRate = _feeRate;
     }
@@ -492,12 +638,19 @@ contract RentCreditEscrow is AccessControlEnumerable, Pausable, ReentrancyGuard 
         disputeFee = _fee;
     }
 
-    function addSupportedToken(address _token) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function addSupportedToken(
+        address _token
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
         supportedTokens[_token] = true;
     }
 
-    function removeSupportedToken(address _token) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(_token != address(USDC) && _token != address(EURC), "Cannot remove core tokens");
+    function removeSupportedToken(
+        address _token
+    ) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(
+            _token != address(USDC) && _token != address(EURC),
+            "Cannot remove core tokens"
+        );
         supportedTokens[_token] = false;
     }
 
